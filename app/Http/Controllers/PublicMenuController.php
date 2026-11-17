@@ -2,9 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\DailyMenu;
+use Inertia\Inertia;
 
 class PublicMenuController extends Controller
 {
-    //
+    public function index()
+    {
+        return Inertia::render('Public/Menu/Index', [
+            'menus' => DailyMenu::where('status', 'published')
+                ->with('items.menuItem')
+                ->latest('menu_date')
+                ->paginate(10),
+        ]);
+    }
+
+    public function show(DailyMenu $dailyMenu)
+    {
+        abort_unless($dailyMenu->status === 'published', 404);
+
+        $dailyMenu->load('items.menuItem');
+
+        return Inertia::render('Public/Menu/Show', [
+            'menu' => $dailyMenu,
+        ]);
+    }
 }
