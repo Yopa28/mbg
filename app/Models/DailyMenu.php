@@ -27,4 +27,9 @@ class DailyMenu extends Model
     {
         return $this->hasMany(DailyMenuItem::class);
     }
+
+    public function kitchenDocumentations(): HasMany
+    {
+        return $this->hasMany(KitchenDocumentation::class);
+    }
 }

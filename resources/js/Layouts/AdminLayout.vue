@@ -36,9 +36,9 @@ const navigation = [
     },
     {
         label: 'Kelola Foto',
-        href: null,
+        href: '/admin/kitchen-photos',
         icon: '▧',
-        disabled: true,
+        active: ['/admin/kitchen-photos'],
     },
     {
         label: 'Edit Nutrisi',

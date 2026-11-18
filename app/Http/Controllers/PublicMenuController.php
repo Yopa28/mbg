@@ -11,7 +11,13 @@ class PublicMenuController extends Controller
     public function index()
     {
         $menu = DailyMenu::where('status', 'published')
-            ->with('items.menuItem')
+            ->with([
+                'items.menuItem',
+                'kitchenDocumentations' => function ($query) {
+                    $query->where('is_published', true)
+                        ->orderBy('captured_at');
+                },
+            ])
             ->latest('menu_date')
             ->first();
 
@@ -25,7 +31,13 @@ class PublicMenuController extends Controller
     {
         abort_unless($dailyMenu->status === 'published', 404);
 
-        $dailyMenu->load('items.menuItem');
+        $dailyMenu->load([
+            'items.menuItem',
+            'kitchenDocumentations' => function ($query) {
+                $query->where('is_published', true)
+                    ->orderBy('captured_at');
+            },
+        ]);
 
         return Inertia::render('Public/Menu/Show', [
             'sppg' => Sppg::first(),

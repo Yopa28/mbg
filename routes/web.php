@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\DailyMenuController;
 use App\Http\Controllers\Admin\MenuItemController;
 use App\Http\Controllers\Admin\SppgController;
 use App\Http\Controllers\PublicMenuController;
+use App\Http\Controllers\Admin\KitchenDocumentationController;
 use Illuminate\Support\Facades\Route;
+
 
 // Halaman publik
 Route::get('/', [PublicMenuController::class, 'index'])
@@ -59,5 +61,20 @@ Route::middleware(['auth'])
 
         Route::delete('/menu-items/{menuItem}', [MenuItemController::class, 'destroy'])
             ->name('menu-items.destroy');
+
+        Route::get('/kitchen-photos', [KitchenDocumentationController::class, 'index'])
+            ->name('kitchen-photos.index');
+
+        Route::post('/kitchen-photos', [KitchenDocumentationController::class, 'store'])
+            ->name('kitchen-photos.store');
+
+        Route::put('/kitchen-photos/{kitchenDocumentation}', [KitchenDocumentationController::class, 'update'])
+            ->name('kitchen-photos.update');
+
+        Route::patch('/kitchen-photos/{kitchenDocumentation}/publication', [KitchenDocumentationController::class, 'togglePublication'])
+            ->name('kitchen-photos.publication');
+
+        Route::delete('/kitchen-photos/{kitchenDocumentation}', [KitchenDocumentationController::class, 'destroy'])
+            ->name('kitchen-photos.destroy');
     });
 

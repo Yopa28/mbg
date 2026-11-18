@@ -3,6 +3,7 @@
 import { computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
+import KitchenDocumentation from '@/Components/Public/KitchenDocumentation.vue';
 
 defineOptions({
     layout: PublicLayout,
@@ -206,5 +207,8 @@ const formatNumber = (value) => {
                 </Link>
             </div>
         </section>
+        <KitchenDocumentation
+            :documentations="menu.kitchen_documentations || []"
+        />
     </div>
 </template>

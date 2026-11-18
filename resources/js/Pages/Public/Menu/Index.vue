@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
+import KitchenDocumentation from '@/Components/Public/KitchenDocumentation.vue';
 
 defineOptions({
     layout: PublicLayout,
@@ -342,6 +343,11 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
             </p>
         </section>
 
+        <!-- Kitchen documentation -->
+        <KitchenDocumentation
+            v-if="menu"
+            :documentations="menu.kitchen_documentations || []"
+        />
         <!-- Information note -->
         <section v-if="menu" class="mx-auto max-w-7xl px-5 pb-14 sm:px-8">
             <div class="rounded-xl border border-[#c89446]/30 bg-[#c89446]/10 p-5">
