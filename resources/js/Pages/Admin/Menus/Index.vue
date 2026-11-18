@@ -132,8 +132,13 @@ const formatDate = (date) => {
 };
 
 const portionLabel = (type) => {
-    return type === 'large' ? 'Porsi Besar' : 'Porsi Kecil';
+    return {
+        large: 'Porsi Besar',
+        small: 'Porsi Kecil',
+        toddler: 'Porsi Balita',
+    }[type] ?? 'Porsi Tidak Dikenal';
 };
+
 </script>
 
 <template>
@@ -141,7 +146,7 @@ const portionLabel = (type) => {
 
     <div class="space-y-6">
         <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
+∑            <div>
                 <h2 class="text-lg font-semibold text-slate-800">
                     Daftar Menu Harian
                 </h2>
@@ -256,6 +261,14 @@ const portionLabel = (type) => {
                             >
                                 + Porsi Kecil
                             </button>
+
+			<button
+    type="button"
+    @click="addItem('toddler')"
+    class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 hover:bg-amber-100"
+>
+    + Porsi Balita
+</button>	
                         </div>
                     </div>
 
@@ -346,6 +359,7 @@ const portionLabel = (type) => {
                                     >
                                         <option value="large">Porsi Besar</option>
                                         <option value="small">Porsi Kecil</option>
+					<option value="toddler">Porsi Balita</option>
                                     </select>
                                 </div>
 

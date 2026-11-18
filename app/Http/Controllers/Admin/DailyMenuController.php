@@ -37,7 +37,7 @@ class DailyMenuController extends Controller
             ],
             'items.*.portion_type' => [
                 'required',
-                Rule::in(['large', 'small']),
+                Rule::in(['large', 'small', 'toddler']),
             ],
             'items.*.quantity' => ['required', 'numeric', 'min:0.01'],
             'items.*.unit' => ['required', 'string', 'max:50'],
@@ -77,7 +77,7 @@ class DailyMenuController extends Controller
             ],
             'items.*.portion_type' => [
                 'required',
-                Rule::in(['large', 'small']),
+                Rule::in(['large', 'small', 'toddler']),
             ],
             'items.*.quantity' => ['required', 'numeric', 'min:0.01'],
             'items.*.unit' => ['required', 'string', 'max:50'],
