@@ -1,4 +1,3 @@
-
 <script setup>
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
@@ -22,7 +21,18 @@ const form = useForm({
     name: '',
     category: '',
     description: '',
+    photo: null,
 });
+
+const getPhotoUrl = (photo) => {
+    if (!photo) return null;
+
+    if (photo.startsWith('http://') || photo.startsWith('https://') || photo.startsWith('/')) {
+        return photo;
+    }
+
+    return `/storage/${photo}`;
+};
 
 const openCreateForm = () => {
     editingId.value = null;
@@ -36,6 +46,7 @@ const openEditForm = (item) => {
     form.name = item.name;
     form.category = item.category ?? '';
     form.description = item.description ?? '';
+    form.photo = null;
     form.clearErrors();
     showForm.value = true;
 };
@@ -48,21 +59,21 @@ const closeForm = () => {
 };
 
 const submit = () => {
-    if (editingId.value) {
-        form.put(`/admin/menu-items/${editingId.value}`, {
-            onSuccess: () => closeForm(),
-        });
-    } else {
-        form.post('/admin/menu-items', {
-            onSuccess: () => closeForm(),
-        });
-    }
+    const url = editingId.value
+        ? `/admin/menu-items/${editingId.value}`
+        : '/admin/menu-items';
+
+    form.transform((data) => ({
+        ...data,
+        ...(editingId.value ? { _method: 'put' } : {}),
+    })).post(url, {
+        forceFormData: true,
+        onSuccess: () => closeForm(),
+    });
 };
 
 const deleteItem = (item) => {
-    if (!confirm(`Hapus makanan "${item.name}"?`)) {
-        return;
-    }
+    if (!confirm(`Hapus makanan "${item.name}"?`)) return;
 
     router.delete(`/admin/menu-items/${item.id}`);
 };
@@ -78,7 +89,7 @@ const deleteItem = (item) => {
                     Master Data Makanan
                 </h2>
                 <p class="mt-1 text-sm text-slate-500">
-                    Kelola daftar makanan yang dapat digunakan dalam menu harian.
+                    Kelola daftar makanan beserta foto yang digunakan dalam menu harian.
                 </p>
             </div>
 
@@ -100,7 +111,7 @@ const deleteItem = (item) => {
                     {{ editingId ? 'Edit Data Makanan' : 'Tambah Makanan Baru' }}
                 </h3>
                 <p class="mt-1 text-sm text-slate-500">
-                    Masukkan informasi dasar makanan.
+                    Masukkan informasi makanan dan foto.
                 </p>
             </div>
 
@@ -158,6 +169,40 @@ const deleteItem = (item) => {
                     </p>
                 </div>
 
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-slate-700">
+                        Foto Makanan
+                    </label>
+
+                    <div
+                        v-if="editingId && menuItems.data.find(item => item.id === editingId)?.photo"
+                        class="mb-3"
+                    >
+                        <p class="mb-2 text-xs text-slate-500">Foto saat ini:</p>
+                        <img
+                            :src="getPhotoUrl(menuItems.data.find(item => item.id === editingId)?.photo)"
+                            alt="Foto makanan saat ini"
+                            class="h-32 w-40 rounded-lg border border-slate-200 object-cover"
+                        />
+                    </div>
+
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        @input="form.photo = $event.target.files[0] || null"
+                        class="block w-full rounded-lg border border-slate-300 bg-white text-sm text-slate-600 file:mr-4 file:border-0 file:bg-slate-100 file:px-4 file:py-3 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-200"
+                    />
+
+                    <p class="mt-2 text-xs text-slate-400">
+                        Format JPG, JPEG, PNG, atau WEBP. Maksimal 5 MB.
+                        Kosongkan jika tidak ingin mengganti foto.
+                    </p>
+
+                    <p v-if="form.errors.photo" class="mt-1 text-xs text-red-600">
+                        {{ form.errors.photo }}
+                    </p>
+                </div>
+
                 <div class="flex flex-col-reverse justify-end gap-3 border-t border-slate-100 pt-5 sm:flex-row">
                     <button
                         type="button"
@@ -172,7 +217,7 @@ const deleteItem = (item) => {
                         :disabled="form.processing"
                         class="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
                     >
-                        {{ form.processing ? 'Menyimpan...' : 'Simpan Makanan' }}
+                        {{ form.processing ? 'Mengunggah...' : 'Simpan Makanan' }}
                     </button>
                 </div>
             </form>
@@ -190,6 +235,7 @@ const deleteItem = (item) => {
                 <table class="w-full text-left text-sm">
                     <thead class="bg-slate-50 text-slate-500">
                         <tr>
+                            <th class="px-5 py-3 font-medium">Foto</th>
                             <th class="px-5 py-3 font-medium">Nama Makanan</th>
                             <th class="px-5 py-3 font-medium">Kategori</th>
                             <th class="px-5 py-3 text-right font-medium">Aksi</th>
@@ -202,6 +248,21 @@ const deleteItem = (item) => {
                             :key="item.id"
                             class="hover:bg-slate-50/70"
                         >
+                            <td class="px-5 py-4">
+                                <img
+                                    v-if="item.photo"
+                                    :src="getPhotoUrl(item.photo)"
+                                    :alt="item.name"
+                                    class="h-14 w-16 rounded-lg border border-slate-200 object-cover"
+                                />
+                                <div
+                                    v-else
+                                    class="flex h-14 w-16 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-400"
+                                >
+                                    No Foto
+                                </div>
+                            </td>
+
                             <td class="px-5 py-4">
                                 <p class="font-medium text-slate-800">
                                     {{ item.name }}
@@ -279,4 +340,3 @@ const deleteItem = (item) => {
         </section>
     </div>
 </template>
-

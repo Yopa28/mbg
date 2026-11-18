@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MenuItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class MenuItemController extends Controller
@@ -22,27 +23,54 @@ class MenuItemController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'category' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'photo' => ['nullable', 'string', 'max:255'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
+
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')
+                ->store('menu-items', 'public');
+        }
 
         MenuItem::create($validated);
 
         return back()->with('success', 'Data makanan berhasil ditambahkan.');
     }
 
-    public function update(Request $request, MenuItem $menuItem)
-    {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'category' => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'photo' => ['nullable', 'string', 'max:255'],
-        ]);
 
-        $menuItem->update($validated);
+public function update(Request $request, MenuItem $menuItem)
+{
+    $validated = $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'category' => ['nullable', 'string', 'max:255'],
+        'description' => ['nullable', 'string'],
+        'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+    ]);
 
-        return back()->with('success', 'Data makanan berhasil diperbarui.');
+    $oldPhoto = $menuItem->photo;
+
+    if ($request->hasFile('photo')) {
+        $newPhoto = $request->file('photo')->store('menu-items', 'public');
+
+        if (!$newPhoto) {
+            return back()->withErrors([
+                'photo' => 'Foto gagal diunggah. Silakan coba lagi.',
+            ]);
+        }
+
+        $validated['photo'] = $newPhoto;
+    } else {
+        unset($validated['photo']);
     }
+
+    $menuItem->update($validated);
+
+    if ($request->hasFile('photo') && $oldPhoto) {
+        Storage::disk('public')->delete($oldPhoto);
+    }
+
+    return back()->with('success', 'Data makanan berhasil diperbarui.');
+}
+
 
     public function destroy(MenuItem $menuItem)
     {
@@ -50,6 +78,10 @@ class MenuItemController extends Controller
             return back()->withErrors([
                 'menuItem' => 'Makanan masih digunakan dalam menu harian.',
             ]);
+        }
+
+        if ($menuItem->photo) {
+            Storage::disk('public')->delete($menuItem->photo);
         }
 
         $menuItem->delete();
