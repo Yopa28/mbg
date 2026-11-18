@@ -83,6 +83,21 @@ const deleteItem = (item) => {
     <Head title="Kelola Makanan" />
 
     <div class="space-y-6">
+        <!-- Notifikasi error -->
+<div
+    v-if="$page.props.errors.menuItem"
+    class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4"
+>
+    <span class="text-red-600">⚠</span>
+    <div>
+        <p class="text-sm font-semibold text-red-700">
+            Makanan tidak dapat dihapus
+        </p>
+        <p class="mt-1 text-sm text-red-600">
+            {{ $page.props.errors.menuItem }}
+        </p>
+    </div>
+</div>
         <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
                 <h2 class="text-lg font-semibold text-slate-800">
