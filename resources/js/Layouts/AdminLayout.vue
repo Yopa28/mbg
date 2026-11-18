@@ -48,9 +48,9 @@ const navigation = [
     },
     {
         label: 'Hasil Ulasan',
-        href: null,
+        href: '/admin/feedback',
         icon: '▱',
-        disabled: true,
+        active: ['/admin/feedback'],
     },
     {
         label: 'Riwayat Harian',

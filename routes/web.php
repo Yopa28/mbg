@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\DailyMenuController;
 use App\Http\Controllers\Admin\MenuItemController;
 use App\Http\Controllers\Admin\SppgController;
 use App\Http\Controllers\PublicMenuController;
+use App\Http\Controllers\PublicFeedbackController;
 use App\Http\Controllers\Admin\KitchenDocumentationController;
+use App\Http\Controllers\Admin\FeedbackController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -16,6 +18,10 @@ Route::get('/', [PublicMenuController::class, 'index'])
 
 Route::get('/menu/{dailyMenu}', [PublicMenuController::class, 'show'])
     ->name('public.menu.show');
+
+Route::post('/feedback', [PublicFeedbackController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('public.feedback.store');
 
 // Halaman admin - wajib login
 Route::middleware(['auth'])
@@ -61,6 +67,15 @@ Route::middleware(['auth'])
 
         Route::delete('/menu-items/{menuItem}', [MenuItemController::class, 'destroy'])
             ->name('menu-items.destroy');
+
+        Route::get('/feedback', [FeedbackController::class, 'index'])
+            ->name('feedback.index');
+
+        Route::patch('/feedback/{feedback}', [FeedbackController::class, 'update'])
+            ->name('feedback.update');
+
+        Route::delete('/feedback/{feedback}', [FeedbackController::class, 'destroy'])
+            ->name('feedback.destroy');
 
         Route::get('/kitchen-photos', [KitchenDocumentationController::class, 'index'])
             ->name('kitchen-photos.index');

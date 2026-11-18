@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import KitchenDocumentation from '@/Components/Public/KitchenDocumentation.vue';
+import FeedbackForm from '@/Components/Public/FeedbackForm.vue';
 
 defineOptions({
     layout: PublicLayout,
@@ -348,6 +349,9 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
             v-if="menu"
             :documentations="menu.kitchen_documentations || []"
         />
+        <!-- Feedback penerima -->
+        <FeedbackForm :daily-menu-id="menu?.id ?? null" />
+
         <!-- Information note -->
         <section v-if="menu" class="mx-auto max-w-7xl px-5 pb-14 sm:px-8">
             <div class="rounded-xl border border-[#c89446]/30 bg-[#c89446]/10 p-5">
