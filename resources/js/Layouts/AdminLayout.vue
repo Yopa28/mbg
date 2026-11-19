@@ -54,9 +54,9 @@ const navigation = [
     },
     {
         label: 'Riwayat Harian',
-        href: null,
+        href: '/admin/history',
         icon: '◷',
-        disabled: true,
+        active: ['/admin/history'],
     },
     {
         label: 'Pengaturan SPPG',
@@ -67,7 +67,11 @@ const navigation = [
 ];
 
 const isActive = (item) => {
-    return item.active?.includes(page.url.split('?')[0]) ?? false;
+    const currentPath = page.url.split('?')[0];
+
+    return item.active?.some((path) => {
+        return currentPath === path || currentPath.startsWith(`${path}/`);
+    }) ?? false;
 };
 
 const logout = () => {

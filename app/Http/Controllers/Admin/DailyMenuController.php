@@ -129,6 +129,12 @@ class DailyMenuController extends Controller
 
     public function destroy(DailyMenu $dailyMenu)
     {
+        if ($dailyMenu->menu_date->lt(today())) {
+            return back()->withErrors([
+                'menu' => 'Menu yang sudah masuk riwayat harian tidak dapat dihapus.',
+            ]);
+        }
+
         $dailyMenu->delete();
 
         return back()->with('success', 'Menu harian berhasil dihapus.');

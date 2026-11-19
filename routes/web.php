@@ -9,6 +9,8 @@ use App\Http\Controllers\PublicMenuController;
 use App\Http\Controllers\PublicFeedbackController;
 use App\Http\Controllers\Admin\KitchenDocumentationController;
 use App\Http\Controllers\Admin\FeedbackController;
+
+use App\Http\Controllers\Admin\HistoryController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -67,6 +69,12 @@ Route::middleware(['auth'])
 
         Route::delete('/menu-items/{menuItem}', [MenuItemController::class, 'destroy'])
             ->name('menu-items.destroy');
+
+        Route::get('/history', [HistoryController::class, 'index'])
+            ->name('history.index');
+
+        Route::get('/history/{dailyMenu}', [HistoryController::class, 'show'])
+            ->name('history.show');
 
         Route::get('/feedback', [FeedbackController::class, 'index'])
             ->name('feedback.index');
