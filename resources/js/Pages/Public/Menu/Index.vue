@@ -4,6 +4,7 @@ import { Head } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import KitchenDocumentation from '@/Components/Public/KitchenDocumentation.vue';
 import FeedbackForm from '@/Components/Public/FeedbackForm.vue';
+import { getPublicPhotoUrl } from '@/Utils/publicPhotoUrl';
 
 defineOptions({
     layout: PublicLayout,
@@ -117,14 +118,7 @@ const getWeightInGrams = (items) => {
 };
 
 const getPhoto = (item) => {
-    const photo = item?.menu_item?.photo;
-
-    if (!photo) return null;
-    if (photo.startsWith('http://') || photo.startsWith('https://') || photo.startsWith('/')) {
-        return photo;
-    }
-
-    return `/storage/${photo}`;
+    return getPublicPhotoUrl(item?.menu_item?.photo);
 };
 
 const menuDate = computed(() => formatDate(props.menu?.menu_date));
@@ -197,8 +191,39 @@ onBeforeUnmount(() => revealObserver?.disconnect());
     <div>
         <!-- Hero menu -->
         <section class="public-page-enter relative overflow-hidden bg-bgn-surface">
-            <div class="relative mx-auto max-w-7xl px-5 py-6 sm:px-8 sm:py-7 lg:px-10">
-                <div class="max-w-5xl">
+            <div class="relative mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+                <div v-if="menu" class="grid items-end gap-7 border-b border-bgn-line pb-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.55fr)] lg:gap-10 lg:pb-10">
+                    <div class="min-w-0 max-w-5xl">
+                        <div class="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-bgn-gold-dark sm:text-[11px]">
+                            <svg viewBox="0 0 24 24" fill="none" class="h-3.5 w-3.5 shrink-0" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                <path d="M7 3.75h7l4 4v12.5H7a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z"></path>
+                                <path d="M14 3.75v4h4M8.5 12h7M8.5 15.5h7"></path>
+                            </svg>
+                            <span>DOKUMEN SAJIAN RESMI MBG</span>
+                            <span aria-hidden="true" class="text-bgn-gold">•</span>
+                            <span>MENU PAKET STANDAR NASIONAL</span>
+                        </div>
+
+                        <h1 class="mt-4 break-words text-3xl font-bold leading-tight tracking-tight text-bgn-navy sm:text-4xl lg:text-5xl">
+                            {{ menu.title }}
+                        </h1>
+
+                        <p v-if="menu.description" class="mt-4 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">
+                            {{ menu.description }}
+                        </p>
+                    </div>
+
+                    <div class="border-l-2 border-bgn-gold bg-bgn-navy px-5 py-4 text-white sm:px-6 sm:py-5 lg:justify-self-end lg:w-full lg:max-w-[360px]">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-bgn-gold-soft">
+                            Menu Hari Ini
+                        </p>
+                        <p class="mt-2 text-sm font-semibold leading-6 sm:text-base">
+                            {{ menuDate }}
+                        </p>
+                    </div>
+                </div>
+
+                <div v-else class="max-w-5xl">
                     <div class="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-bgn-gold-dark sm:text-[11px]">
                         <svg viewBox="0 0 24 24" fill="none" class="h-3.5 w-3.5 shrink-0" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                             <path d="M7 3.75h7l4 4v12.5H7a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z"></path>
@@ -209,41 +234,18 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                         <span>MENU PAKET STANDAR NASIONAL</span>
                     </div>
 
-                    <template v-if="menu">
-                        <h1 class="mt-2 text-2xl font-bold leading-tight tracking-tight text-bgn-navy sm:text-[28px]">
-                            {{ menu.title }}
-                        </h1>
-
-                        <p v-if="menu.description" class="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-                            {{ menu.description }}
-                        </p>
-
-                        <div class="mt-4 border-t border-bgn-line"></div>
-
-                        <p class="mt-5 inline-flex items-center gap-2 rounded-md bg-bgn-navy px-3 py-1.5 text-sm font-semibold text-bgn-gold-soft sm:text-base">
-                            <svg viewBox="0 0 24 24" fill="none" class="h-4 w-4 shrink-0" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <rect x="4" y="5.5" width="16" height="15" rx="2"></rect>
-                                <path d="M8 3.5v4M16 3.5v4M4 10h16"></path>
-                            </svg>
-                            Menu Hari Ini: {{ menuDate }}
-                        </p>
-                    </template>
-
-                    <template v-else>
-                        <h1 class="mt-2 text-2xl font-bold leading-tight tracking-tight text-bgn-navy-deep sm:text-[28px]">
-                            Informasi Menu Makan Bergizi Gratis
-                        </h1>
-                        <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                            Informasi menu dan kandungan gizi akan ditampilkan setelah menu harian dipublikasikan oleh SPPG.
-                        </p>
-                        <div class="mt-4 border-t border-bgn-line"></div>
-                    </template>
+                    <h1 class="mt-3 text-3xl font-bold leading-tight tracking-tight text-bgn-navy-deep sm:text-4xl">
+                        Informasi Menu Makan Bergizi Gratis
+                    </h1>
+                    <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
+                        Informasi menu dan kandungan gizi akan ditampilkan setelah menu harian dipublikasikan oleh SPPG.
+                    </p>
                 </div>
             </div>
         </section>
 
         <!-- Portion cards -->
-        <section v-if="menu" class="public-scroll-reveal mx-auto max-w-7xl px-5 pb-5 pt-10 sm:px-8 sm:pt-12 lg:px-10">
+        <section v-if="menu" class="public-scroll-reveal mx-auto max-w-[1440px] px-5 pb-5 pt-10 sm:px-8 sm:pt-12 lg:px-10">
             <div class="mb-9">
                 <p class="text-xs font-bold uppercase tracking-[0.16em] text-bgn-gold-dark">
                     Komposisi makanan
@@ -256,7 +258,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                 </p>
             </div>
 
-            <div class="grid items-start gap-6 lg:grid-cols-3 lg:gap-5">
+            <div class="grid items-start gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-5">
                 <article
                     v-for="portion in portions"
                     :key="portion.key"
@@ -294,12 +296,17 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                                         loading="lazy"
                                         class="h-full w-full object-cover transition-transform duration-300 ease-out group-hover/photo:scale-[1.02] motion-reduce:transform-none"
                                     />
-                                    <div v-else class="flex h-full w-full items-center justify-center text-slate-300">
-                                        <svg viewBox="0 0 24 24" fill="none" class="h-7 w-7" stroke="currentColor" stroke-width="1.5">
-                                            <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-                                            <circle cx="8.5" cy="9" r="1.5"></circle>
-                                            <path d="m21 15-5-5L5 20"></path>
-                                        </svg>
+                                    <div v-else class="flex h-full w-full items-center justify-center bg-bgn-surface px-4 text-center">
+                                        <div>
+                                            <svg viewBox="0 0 32 32" fill="none" class="mx-auto h-8 w-8 text-bgn-gold-dark/70" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                                                <circle cx="16" cy="16" r="10.5"></circle>
+                                                <circle cx="16" cy="16" r="6.5"></circle>
+                                                <path d="M4.5 8v7M2.5 10.5h4M27.5 8v7M25.5 10.5h4"></path>
+                                            </svg>
+                                            <p class="mt-3 text-sm font-semibold text-slate-600">
+                                                Foto makanan belum tersedia
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -427,17 +434,17 @@ onBeforeUnmount(() => revealObserver?.disconnect());
         <!-- Nutrition transparency -->
         <section
             v-if="menu"
-            class="public-scroll-reveal mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12"
+            class="public-scroll-reveal mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:px-10 lg:py-14"
         >
             <div class="overflow-hidden rounded-xl border border-bgn-line bg-white shadow-sm">
-                <header class="border-b border-bgn-line bg-bgn-surface px-5 py-5 sm:px-6">
-                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <header class="border-b border-bgn-line border-l-[3px] border-l-bgn-gold bg-bgn-surface px-5 py-6 sm:px-8 sm:py-7">
+                    <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-bgn-gold-dark">
                         Tabel Angka Kecukupan Gizi (AKG)
                     </p>
-                    <h2 class="mt-1 text-lg font-bold text-bgn-navy sm:text-xl">
+                    <h2 class="mt-2 text-xl font-bold tracking-tight text-bgn-navy sm:text-2xl">
                         Transparansi Kandungan Nutrisi Lengkap
                     </h2>
-                    <p class="mt-1 text-xs leading-5 text-slate-500 sm:text-sm">
+                    <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500">
                         Perhitungan komprehensif berdasarkan pedoman standar Permenkes RI No. 28 Tahun 2019.
                     </p>
                 </header>
@@ -446,10 +453,10 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                     <table class="w-full table-fixed border-collapse text-left text-xs sm:text-sm">
                         <thead>
                             <tr class="border-b border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">
-                                <th scope="col" class="w-[36%] px-3 py-3 sm:px-6">
+                                <th scope="col" class="w-[36%] px-4 py-4 sm:px-8">
                                     Unsur Nutrisi
                                 </th>
-                                <th scope="col" class="px-3 py-3 sm:px-6">
+                                <th scope="col" class="px-4 py-4 sm:px-8">
                                     Sumber Bahan Makanan
                                 </th>
                             </tr>
@@ -460,7 +467,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                                 :key="nutrient.key"
                                 class="transition-colors hover:bg-slate-50/60"
                             >
-                                <th scope="row" class="px-3 py-3 font-semibold text-slate-900 sm:px-6 sm:py-3.5">
+                                <th scope="row" class="px-4 py-4 font-semibold text-slate-900 sm:px-8 sm:py-4">
                                     <span class="flex items-center gap-2">
                                         <span
                                             class="h-2 w-2 shrink-0 rounded-full"
@@ -469,7 +476,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                                         <span>{{ nutrient.label }}</span>
                                     </span>
                                 </th>
-                                <td class="break-words px-3 py-3 leading-5 sm:px-6 sm:py-3.5">
+                                <td class="break-words px-4 py-4 leading-6 sm:px-8 sm:py-4">
                                     <span v-if="nutrient.sources.length">
                                         {{ nutrient.sources.join(', ') }}
                                     </span>
@@ -484,7 +491,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                     </table>
                 </div>
 
-                <p class="border-t border-slate-100 px-5 py-3 text-[11px] leading-5 text-slate-500 sm:px-6">
+                <p class="border-t border-slate-100 px-5 py-4 text-xs leading-5 text-slate-500 sm:px-8">
                     Sumber untuk energi, protein, karbohidrat, dan lemak diambil dari item menu yang memiliki nilai nutrisi terkait. Data serat pangan, zat besi, dan kalsium belum tersedia pada struktur menu saat ini.
                 </p>
             </div>

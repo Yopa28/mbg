@@ -34,7 +34,7 @@ const submit = () => {
 </script>
 
 <template>
-    <section class="public-scroll-reveal mx-auto max-w-7xl px-5 pb-12 pt-8 sm:px-8 lg:px-10 lg:pb-14">
+    <section class="public-scroll-reveal mx-auto max-w-[1440px] px-5 pb-12 pt-8 sm:px-8 lg:px-10 lg:pb-14">
         <div class="overflow-hidden rounded-xl border border-bgn-line bg-white shadow-sm">
             <div class="relative overflow-hidden bg-bgn-navy px-6 py-4 text-white sm:px-8">
                 <p class="relative text-[10px] font-bold uppercase tracking-[0.22em] text-bgn-gold-soft">
@@ -43,7 +43,7 @@ const submit = () => {
                 <div class="relative mt-3 h-px w-16 bg-bgn-gold"></div>
             </div>
 
-            <div class="grid lg:grid-cols-[0.82fr_1.18fr]">
+            <div class="grid lg:grid-cols-[0.72fr_1.28fr]">
                 <aside class="border-b border-slate-100 px-6 py-6 sm:px-8 sm:py-8 lg:border-b-0 lg:border-r lg:px-9">
                     <span class="inline-flex rounded-sm bg-bgn-surface px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-bgn-navy">
                         Saluran pengawasan publik

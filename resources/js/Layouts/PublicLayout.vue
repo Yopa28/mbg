@@ -13,7 +13,7 @@ defineProps({
 <template>
     <div class="public-page-motion min-h-screen bg-bgn-paper text-slate-800">
         <header class="relative border-b-2 border-bgn-gold bg-bgn-navy text-white shadow-sm">
-            <div class="relative mx-auto flex max-w-7xl items-center gap-4 px-5 py-4 sm:gap-5 sm:px-8 sm:py-5 lg:px-10">
+            <div class="relative mx-auto flex max-w-[1440px] items-center gap-4 px-5 py-4 sm:gap-5 sm:px-8 sm:py-5 lg:px-10">
                 <a href="/" class="group flex shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bgn-gold-soft focus-visible:ring-offset-4 focus-visible:ring-offset-bgn-navy">
                     <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-bgn-gold-soft bg-bgn-cream p-1 shadow-sm transition-transform duration-200 ease-out group-hover:scale-[1.02] motion-reduce:transform-none sm:h-[88px] sm:w-20">
                         <img
@@ -65,7 +65,7 @@ defineProps({
         </main>
 
         <footer class="border-t-2 border-bgn-gold bg-bgn-navy text-white">
-            <div class="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-8 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
+            <div class="mx-auto flex max-w-[1440px] flex-col gap-6 px-5 py-8 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
                 <div class="flex items-center gap-3">
                     <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-bgn-gold-soft/60 bg-bgn-cream p-1">
                         <img

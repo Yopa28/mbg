@@ -1,4 +1,6 @@
 <script setup>
+import { getPublicPhotoUrl } from '@/Utils/publicPhotoUrl';
+
 const props = defineProps({
     documentations: {
         type: Array,
@@ -12,20 +14,6 @@ const categories = [
     { value: 'temperature_check', label: 'Pemeriksaan Suhu' },
     { value: 'serving', label: 'Penyajian' },
 ];
-
-const getPhotoUrl = (path) => {
-    if (!path) return null;
-
-    if (
-        path.startsWith('http://') ||
-        path.startsWith('https://') ||
-        path.startsWith('/')
-    ) {
-        return path;
-    }
-
-    return `/storage/${path}`;
-};
 
 const getCategoryLabel = (value) => {
     return categories.find((category) => category.value === value)?.label || value;
@@ -49,7 +37,7 @@ const formatDateTime = (value) => {
         v-if="documentations.length"
         class="public-scroll-reveal border-y border-bgn-line bg-bgn-paper"
     >
-        <div class="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+        <div class="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
             <div class="mb-6">
                 <p class="text-xs font-bold uppercase tracking-[0.16em] text-bgn-gold-dark">
                     Transparansi proses dapur
@@ -62,7 +50,7 @@ const formatDateTime = (value) => {
                 </p>
             </div>
 
-            <div class="grid items-start grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="grid items-start grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
                 <article
                     v-for="item in documentations"
                     :key="item.id"
@@ -70,17 +58,24 @@ const formatDateTime = (value) => {
                 >
                     <div class="group/photo relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
                         <img
-                            v-if="getPhotoUrl(item.photo_path)"
-                            :src="getPhotoUrl(item.photo_path)"
+                            v-if="getPublicPhotoUrl(item.photo_path)"
+                            :src="getPublicPhotoUrl(item.photo_path)"
                             :alt="item.title || 'Dokumentasi dapur'"
                             loading="lazy"
                             class="h-full w-full object-cover transition-transform duration-300 group-hover/photo:scale-[1.02] motion-reduce:transform-none"
                         />
                         <div
                             v-else
-                            class="flex h-full items-center justify-center text-sm text-slate-400"
+                            class="flex h-full flex-col items-center justify-center bg-bgn-surface px-4 text-center"
                         >
-                            Foto belum tersedia
+                            <svg viewBox="0 0 32 32" fill="none" class="h-8 w-8 text-bgn-gold-dark/70" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                                <rect x="4.5" y="6.5" width="23" height="19" rx="2"></rect>
+                                <circle cx="11" cy="13" r="2"></circle>
+                                <path d="m7 23 7-7 4 4 3-3 4 6"></path>
+                            </svg>
+                            <span class="mt-3 text-sm font-semibold text-slate-600">
+                                Foto dokumentasi belum tersedia
+                            </span>
                         </div>
                     </div>
 
