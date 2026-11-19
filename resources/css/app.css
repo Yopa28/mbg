@@ -9,12 +9,22 @@
 
 @theme {
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --color-bgn-navy: #142b52;
+    --color-bgn-navy-deep: #173060;
+    --color-bgn-gold: #c89446;
+    --color-bgn-gold-soft: #e4c58f;
+    --color-bgn-gold-dark: #8b6128;
+    --color-bgn-gold-pale: #f8f4eb;
+    --color-bgn-cream: #f8f6ef;
+    --color-bgn-paper: #f7f8fa;
+    --color-bgn-surface: #f8fafc;
+    --color-bgn-line: #e7ebf2;
 }
 
 @keyframes public-page-enter {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(6px);
     }
 
     to {
@@ -25,10 +35,32 @@
 
 @media (prefers-reduced-motion: no-preference) {
     .public-page-enter {
-        animation: public-page-enter 560ms cubic-bezier(0.22, 0.68, 0, 1) both;
+        animation: public-page-enter 420ms cubic-bezier(0.22, 0.68, 0, 1) both;
     }
 
-    .public-page-enter-delayed {
-        animation-delay: 100ms;
+    .public-scroll-reveal.is-pending {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    .public-scroll-reveal.is-visible {
+        animation: public-page-enter 420ms cubic-bezier(0.22, 0.68, 0, 1) both;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .public-page-motion *,
+    .public-page-motion *::before,
+    .public-page-motion *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .public-page-motion .public-page-enter {
+        animation: none !important;
+        opacity: 1;
+        transform: none;
     }
 }

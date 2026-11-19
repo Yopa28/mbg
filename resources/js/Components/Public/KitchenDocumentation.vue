@@ -47,14 +47,14 @@ const formatDateTime = (value) => {
 <template>
     <section
         v-if="documentations.length"
-        class="public-page-enter public-page-enter-delayed border-y border-slate-200/70 bg-[#f7f8fa]"
+        class="public-scroll-reveal border-y border-bgn-line bg-bgn-paper"
     >
         <div class="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
             <div class="mb-6">
-                <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#a87532]">
+                <p class="text-xs font-bold uppercase tracking-[0.16em] text-bgn-gold-dark">
                     Transparansi proses dapur
                 </p>
-                <h2 class="mt-2 text-2xl font-black tracking-tight text-[#142b52] sm:text-3xl">
+                <h2 class="mt-2 text-2xl font-bold tracking-tight text-bgn-navy sm:text-3xl">
                     Dokumentasi Kegiatan Dapur
                 </h2>
                 <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-500">
@@ -62,19 +62,19 @@ const formatDateTime = (value) => {
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="grid items-start grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <article
                     v-for="item in documentations"
                     :key="item.id"
-                    class="group overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-[0_8px_24px_rgba(20,43,82,0.04)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(20,43,82,0.09)]"
+                    class="group overflow-hidden rounded-xl border border-bgn-line bg-white shadow-sm transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-bgn-gold/40 hover:shadow-[0_8px_22px_rgba(20,43,82,0.08)] motion-reduce:transform-none"
                 >
-                    <div class="relative aspect-[2/1] w-full overflow-hidden bg-slate-100">
+                    <div class="group/photo relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
                         <img
                             v-if="getPhotoUrl(item.photo_path)"
                             :src="getPhotoUrl(item.photo_path)"
                             :alt="item.title || 'Dokumentasi dapur'"
                             loading="lazy"
-                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                            class="h-full w-full object-cover transition-transform duration-300 group-hover/photo:scale-[1.02] motion-reduce:transform-none"
                         />
                         <div
                             v-else
@@ -85,10 +85,10 @@ const formatDateTime = (value) => {
                     </div>
 
                     <div class="p-4 sm:p-5">
-                        <span class="inline-flex rounded-full bg-[#f5f7fb] px-3 py-1 text-[10px] font-bold text-[#a87532]">
+                        <span class="inline-flex rounded-sm border-l-2 border-bgn-gold bg-bgn-surface px-2 py-1 text-[10px] font-semibold text-slate-600">
                             {{ getCategoryLabel(item.category) }}
                         </span>
-                        <h3 class="mt-2 text-base font-bold leading-snug text-[#142b52]">
+                        <h3 class="mt-2 text-base font-bold leading-snug text-bgn-navy">
                             {{ item.title || getCategoryLabel(item.category) }}
                         </h3>
 
@@ -101,17 +101,17 @@ const formatDateTime = (value) => {
 
                         <div
                             v-if="item.temperature !== null && item.temperature !== undefined"
-                            class="mt-4 flex items-center justify-between rounded-xl border border-[#e7ebf2] bg-[#f5f7fb] px-4 py-3"
+                            class="mt-4 flex items-center justify-between border-t border-bgn-line pt-3"
                         >
                             <div>
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                                     Hasil pemeriksaan suhu
                                 </p>
-                                <p class="mt-1 text-xl font-black text-[#142b52]">
+                                <p class="mt-1 text-lg font-bold text-bgn-navy">
                                     {{ item.temperature }} °C
                                 </p>
                             </div>
-                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#142b52]/5 text-[#142b52]">
+                            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-bgn-navy/5 text-bgn-navy">
                                 <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" stroke="currentColor" stroke-width="1.7">
                                     <path d="M14 14.76V5a3 3 0 0 0-6 0v9.76a5 5 0 1 0 6 0Z"></path>
                                     <path d="M11 11v7"></path>
@@ -121,7 +121,7 @@ const formatDateTime = (value) => {
 
                         <p
                             v-if="item.captured_at"
-                            class="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-400"
+                            class="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-500"
                         >
                             {{ formatDateTime(item.captured_at) }}
                         </p>

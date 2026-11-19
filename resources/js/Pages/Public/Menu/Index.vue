@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, onBeforeUnmount, onMounted } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import KitchenDocumentation from '@/Components/Public/KitchenDocumentation.vue';
@@ -145,6 +145,50 @@ const nutritionRows = computed(() => {
         return { ...nutrient, sources };
     });
 });
+
+let revealObserver;
+
+onMounted(() => {
+    const revealElements = document.querySelectorAll('.public-scroll-reveal');
+
+    if (!revealElements.length) return;
+
+    if (
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+        !('IntersectionObserver' in window)
+    ) {
+        revealElements.forEach((element) => element.classList.add('is-visible'));
+        return;
+    }
+
+    revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+
+            entry.target.classList.remove('is-pending');
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+        });
+    }, {
+        rootMargin: '0px 0px -48px 0px',
+        threshold: 0.08,
+    });
+
+    revealElements.forEach((element) => {
+        const bounds = element.getBoundingClientRect();
+        const isInViewport = bounds.top <= window.innerHeight && bounds.bottom >= 0;
+
+        if (isInViewport) {
+            element.classList.add('is-visible');
+            return;
+        }
+
+        element.classList.add('is-pending');
+        revealObserver.observe(element);
+    });
+});
+
+onBeforeUnmount(() => revealObserver?.disconnect());
 </script>
 
 <template>
@@ -152,21 +196,21 @@ const nutritionRows = computed(() => {
 
     <div>
         <!-- Hero menu -->
-        <section class="public-page-enter relative overflow-hidden bg-[#f8fafc]">
+        <section class="public-page-enter relative overflow-hidden bg-bgn-surface">
             <div class="relative mx-auto max-w-7xl px-5 py-6 sm:px-8 sm:py-7 lg:px-10">
                 <div class="max-w-5xl">
-                    <div class="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-[#a64c14] sm:text-[11px]">
+                    <div class="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-bgn-gold-dark sm:text-[11px]">
                         <svg viewBox="0 0 24 24" fill="none" class="h-3.5 w-3.5 shrink-0" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                             <path d="M7 3.75h7l4 4v12.5H7a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z"></path>
                             <path d="M14 3.75v4h4M8.5 12h7M8.5 15.5h7"></path>
                         </svg>
                         <span>DOKUMEN SAJIAN RESMI MBG</span>
-                        <span aria-hidden="true" class="text-[#c89446]">•</span>
+                        <span aria-hidden="true" class="text-bgn-gold">•</span>
                         <span>MENU PAKET STANDAR NASIONAL</span>
                     </div>
 
                     <template v-if="menu">
-                        <h1 class="mt-2 text-2xl font-bold leading-tight tracking-tight text-[#142b52] sm:text-[28px]">
+                        <h1 class="mt-2 text-2xl font-bold leading-tight tracking-tight text-bgn-navy sm:text-[28px]">
                             {{ menu.title }}
                         </h1>
 
@@ -174,9 +218,9 @@ const nutritionRows = computed(() => {
                             {{ menu.description }}
                         </p>
 
-                        <div class="mt-4 border-t border-slate-200"></div>
+                        <div class="mt-4 border-t border-bgn-line"></div>
 
-                        <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-[#142b52] px-3 py-1 text-sm font-semibold text-[#ffd35a] sm:text-base">
+                        <p class="mt-5 inline-flex items-center gap-2 rounded-md bg-bgn-navy px-3 py-1.5 text-sm font-semibold text-bgn-gold-soft sm:text-base">
                             <svg viewBox="0 0 24 24" fill="none" class="h-4 w-4 shrink-0" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <rect x="4" y="5.5" width="16" height="15" rx="2"></rect>
                                 <path d="M8 3.5v4M16 3.5v4M4 10h16"></path>
@@ -186,25 +230,25 @@ const nutritionRows = computed(() => {
                     </template>
 
                     <template v-else>
-                        <h1 class="mt-2 text-2xl font-bold leading-tight tracking-tight text-[#173060] sm:text-[28px]">
+                        <h1 class="mt-2 text-2xl font-bold leading-tight tracking-tight text-bgn-navy-deep sm:text-[28px]">
                             Informasi Menu Makan Bergizi Gratis
                         </h1>
                         <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
                             Informasi menu dan kandungan gizi akan ditampilkan setelah menu harian dipublikasikan oleh SPPG.
                         </p>
-                        <div class="mt-4 border-t border-slate-200"></div>
+                        <div class="mt-4 border-t border-bgn-line"></div>
                     </template>
                 </div>
             </div>
         </section>
 
         <!-- Portion cards -->
-        <section v-if="menu" class="public-page-enter public-page-enter-delayed mx-auto max-w-7xl px-5 pb-5 pt-10 sm:px-8 sm:pt-12 lg:px-10">
+        <section v-if="menu" class="public-scroll-reveal mx-auto max-w-7xl px-5 pb-5 pt-10 sm:px-8 sm:pt-12 lg:px-10">
             <div class="mb-9">
-                <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#a87532]">
+                <p class="text-xs font-bold uppercase tracking-[0.16em] text-bgn-gold-dark">
                     Komposisi makanan
                 </p>
-                <h2 class="mt-2 text-3xl font-black tracking-tight text-[#142b52] sm:text-4xl">
+                <h2 class="mt-2 text-2xl font-bold tracking-tight text-bgn-navy sm:text-3xl">
                     Informasi Setiap Porsi
                 </h2>
                 <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-500">
@@ -216,11 +260,11 @@ const nutritionRows = computed(() => {
                 <article
                     v-for="portion in portions"
                     :key="portion.key"
-                    class="group overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-[0_10px_30px_rgba(20,43,82,0.06)] transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(20,43,82,0.10)]"
+                    class="group overflow-hidden rounded-xl border border-bgn-line bg-white shadow-[0_4px_16px_rgba(20,43,82,0.05)] transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-bgn-gold/40 hover:shadow-[0_8px_22px_rgba(20,43,82,0.08)] motion-reduce:transform-none"
                 >
-                    <div class="flex items-center justify-between gap-3 border-b border-[#c89446]/40 bg-[#142b52] px-5 py-3.5">
+                    <div class="flex items-center justify-between gap-3 border-b border-bgn-gold/35 bg-bgn-navy px-5 py-3.5">
                         <div>
-                            <p class="text-[9px] font-bold uppercase tracking-[0.16em] text-[#e4c58f]">
+                            <p class="text-[9px] font-bold uppercase tracking-[0.16em] text-bgn-gold-soft">
                                 {{ portion.subtitle }}
                             </p>
                             <h3 class="mt-1 text-base font-bold tracking-tight text-white">
@@ -242,13 +286,13 @@ const nutritionRows = computed(() => {
                                 :key="item.id"
                                 class="border-b border-slate-100 pb-4 last:border-0 last:pb-0"
                             >
-                                <div class="aspect-[2.2/1] w-full overflow-hidden rounded-xl bg-[#f1f3f6]">
+                                <div class="group/photo aspect-[16/10] w-full overflow-hidden rounded-lg bg-slate-100">
                                     <img
                                         v-if="getPhoto(item)"
                                         :src="getPhoto(item)"
                                         :alt="item.menu_item?.name || 'Foto makanan'"
                                         loading="lazy"
-                                        class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                                        class="h-full w-full object-cover transition-transform duration-300 ease-out group-hover/photo:scale-[1.02] motion-reduce:transform-none"
                                     />
                                     <div v-else class="flex h-full w-full items-center justify-center text-slate-300">
                                         <svg viewBox="0 0 24 24" fill="none" class="h-7 w-7" stroke="currentColor" stroke-width="1.5">
@@ -261,7 +305,7 @@ const nutritionRows = computed(() => {
 
                                 <div class="flex items-start justify-between gap-4 px-1 pt-3">
                                     <div class="min-w-0">
-                                        <h4 class="text-sm font-bold leading-snug text-[#142b52]">
+                                        <h4 class="text-sm font-bold leading-snug text-bgn-navy">
                                             {{ item.menu_item?.name || 'Makanan' }}
                                         </h4>
                                         <p v-if="item.menu_item?.category" class="mt-1 text-[11px] text-slate-400">
@@ -271,7 +315,7 @@ const nutritionRows = computed(() => {
                                             {{ formatNumber(Number(item.quantity)) }} {{ item.unit }}
                                         </p>
                                     </div>
-                                    <p v-if="item.calories !== null && item.calories !== undefined" class="shrink-0 rounded-full bg-[#f8f4eb] px-3 py-1 text-[11px] font-bold text-[#8b6128]">
+                                    <p v-if="item.calories !== null && item.calories !== undefined" class="shrink-0 rounded-sm bg-bgn-gold-pale px-2.5 py-1 text-[11px] font-bold text-bgn-gold-dark">
                                         {{ formatNumber(Number(item.calories)) }} kkal
                                     </p>
                                 </div>
@@ -292,9 +336,9 @@ const nutritionRows = computed(() => {
                                 Ringkasan nutrisi
                             </p>
 
-                            <div class="mt-3 flex items-center justify-between gap-3 rounded-xl border border-[#e7ebf2] bg-[#f5f7fb] px-4 py-3">
+                            <div class="mt-3 flex items-center justify-between gap-3 rounded-lg border border-bgn-line bg-bgn-surface px-4 py-3">
                                 <p class="text-xs text-slate-500">Total energi</p>
-                                <p class="text-xl font-black tracking-tight text-[#142b52]">
+                                <p class="text-lg font-bold tracking-tight text-bgn-navy">
                                     {{ getNutritionTotal(getItems(portion.key), 'calories') === null
                                         ? 'Belum lengkap'
                                         : formatNumber(getNutritionTotal(getItems(portion.key), 'calories')) }}
@@ -302,25 +346,25 @@ const nutritionRows = computed(() => {
                                 </p>
                             </div>
 
-                            <div class="mt-3 grid grid-cols-3 gap-2">
-                                <div class="rounded-xl border border-slate-100 bg-white p-3">
-                                    <p class="text-[10px] text-slate-400">Protein</p>
+                            <div class="mt-3 grid grid-cols-3 divide-x divide-slate-100 border-y border-slate-100 py-3">
+                                <div class="px-2 first:pl-0">
+                                    <p class="text-[11px] text-slate-500">Protein</p>
                                     <p class="mt-1 text-sm font-bold text-slate-800">
                                         {{ getNutritionTotal(getItems(portion.key), 'protein') === null
                                             ? '-'
                                             : `${formatNumber(getNutritionTotal(getItems(portion.key), 'protein'))} g` }}
                                     </p>
                                 </div>
-                                <div class="rounded-lg border border-slate-100 p-3">
-                                    <p class="text-[10px] text-slate-400">Karbohidrat</p>
+                                <div class="px-2">
+                                    <p class="text-[11px] text-slate-500">Karbohidrat</p>
                                     <p class="mt-1 text-sm font-bold text-slate-800">
                                         {{ getNutritionTotal(getItems(portion.key), 'carbs') === null
                                             ? '-'
                                             : `${formatNumber(getNutritionTotal(getItems(portion.key), 'carbs'))} g` }}
                                     </p>
                                 </div>
-                                <div class="rounded-lg border border-slate-100 p-3">
-                                    <p class="text-[10px] text-slate-400">Lemak</p>
+                                <div class="px-2">
+                                    <p class="text-[11px] text-slate-500">Lemak</p>
                                     <p class="mt-1 text-sm font-bold text-slate-800">
                                         {{ getNutritionTotal(getItems(portion.key), 'fat') === null
                                             ? '-'
@@ -329,9 +373,9 @@ const nutritionRows = computed(() => {
                                 </div>
                             </div>
 
-                            <div class="mt-3 flex items-center justify-between rounded-xl border border-slate-100 bg-white px-4 py-3">
+                            <div class="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
                                 <span class="text-xs text-slate-500">Total berat makanan</span>
-                                <span class="text-sm font-bold text-[#173060]">
+                                <span class="text-sm font-bold text-bgn-navy-deep">
                                     {{ getWeightInGrams(getItems(portion.key)) === null
                                         ? 'Belum tersedia'
                                         : `${formatNumber(getWeightInGrams(getItems(portion.key)))} g` }}
@@ -342,13 +386,13 @@ const nutritionRows = computed(() => {
                 </article>
             </div>
 
-            <aside class="mt-6 flex items-start gap-3 rounded-xl border border-[#e7dfd0] border-l-4 border-l-[#c89446] bg-[#fbf9f4] px-5 py-4">
-                <svg viewBox="0 0 24 24" fill="none" class="mt-0.5 h-5 w-5 shrink-0 text-[#9a6d2e]" stroke="currentColor" stroke-width="1.7">
+            <aside class="mt-6 flex items-start gap-3 rounded-lg border border-bgn-line border-l-2 border-l-bgn-gold bg-white px-5 py-4">
+                <svg viewBox="0 0 24 24" fill="none" class="mt-0.5 h-5 w-5 shrink-0 text-bgn-gold-dark" stroke="currentColor" stroke-width="1.7">
                     <circle cx="12" cy="12" r="9"></circle>
                     <path d="M12 11v5M12 8h.01"></path>
                 </svg>
                 <div>
-                    <p class="text-sm font-bold text-[#795321]">
+                    <p class="text-sm font-bold text-bgn-navy">
                         Catatan informasi gizi
                     </p>
                     <p class="mt-1 text-xs leading-5 text-slate-600">
@@ -360,13 +404,13 @@ const nutritionRows = computed(() => {
 
         <!-- Empty state -->
         <section v-else class="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8">
-            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#173060]/5 text-[#173060]">
+            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-bgn-navy/5 text-bgn-navy">
                 <svg viewBox="0 0 24 24" fill="none" class="h-8 w-8" stroke="currentColor" stroke-width="1.6">
                     <path d="M6 3h9l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"></path>
                     <path d="M14 3v5h5M8 13h8M8 17h8"></path>
                 </svg>
             </div>
-            <h2 class="mt-5 text-xl font-bold text-[#173060]">
+            <h2 class="mt-5 text-xl font-bold text-bgn-navy">
                 Belum ada menu yang dipublikasikan
             </h2>
             <p class="mt-2 text-sm leading-6 text-slate-500">
@@ -383,14 +427,14 @@ const nutritionRows = computed(() => {
         <!-- Nutrition transparency -->
         <section
             v-if="menu"
-            class="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12"
+            class="public-scroll-reveal mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12"
         >
-            <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_4px_16px_-2px_rgba(15,30,61,0.05)]">
-                <header class="border-b border-slate-100 bg-[#fafbfd] px-5 py-5 sm:px-6">
+            <div class="overflow-hidden rounded-xl border border-bgn-line bg-white shadow-sm">
+                <header class="border-b border-bgn-line bg-bgn-surface px-5 py-5 sm:px-6">
                     <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">
                         Tabel Angka Kecukupan Gizi (AKG)
                     </p>
-                    <h2 class="mt-1 text-lg font-bold text-[#112347] sm:text-xl">
+                    <h2 class="mt-1 text-lg font-bold text-bgn-navy sm:text-xl">
                         Transparansi Kandungan Nutrisi Lengkap
                     </h2>
                     <p class="mt-1 text-xs leading-5 text-slate-500 sm:text-sm">
