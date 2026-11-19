@@ -35,10 +35,10 @@ const formatDateTime = (value) => {
 <template>
     <section
         v-if="documentations.length"
-        class="public-scroll-reveal border-y border-bgn-line bg-bgn-paper"
+        class="public-scroll-reveal public-scroll-reveal--stagger border-y border-bgn-line bg-bgn-paper"
     >
         <div class="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
-            <div class="mb-6">
+            <div class="public-reveal-item mb-6">
                 <p class="text-xs font-bold uppercase tracking-[0.16em] text-bgn-gold-dark">
                     Transparansi proses dapur
                 </p>
@@ -52,9 +52,10 @@ const formatDateTime = (value) => {
 
             <div class="grid items-start grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
                 <article
-                    v-for="item in documentations"
+                    v-for="(item, index) in documentations"
                     :key="item.id"
-                    class="group overflow-hidden rounded-xl border border-bgn-line bg-white shadow-sm transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-bgn-gold/40 hover:shadow-[0_8px_22px_rgba(20,43,82,0.08)] motion-reduce:transform-none"
+                    :style="{ '--public-reveal-delay': `${Math.min(index + 1, 4) * 45}ms` }"
+                    class="public-reveal-item group overflow-hidden rounded-xl border border-bgn-line bg-white shadow-sm transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-bgn-gold/40 hover:shadow-[0_8px_22px_rgba(20,43,82,0.08)] motion-reduce:transform-none"
                 >
                     <div class="group/photo relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
                         <img

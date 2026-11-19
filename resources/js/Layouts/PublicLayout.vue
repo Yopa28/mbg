@@ -1,6 +1,5 @@
 <script setup>
 const bgnLogoUrl = '/images/bgn-seal.png';
-const dairiBatikUrl = '/images/dairi-batik.png';
 
 defineProps({
     sppg: {
@@ -11,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-    <div class="public-page-motion min-h-screen bg-bgn-paper text-slate-800">
+    <div class="public-page-motion min-h-screen bg-bgn-paper text-slate-800" style="--public-batik-image: url('/images/dairi-batik.png')">
         <header class="relative border-b-2 border-bgn-gold bg-bgn-navy text-white shadow-sm">
             <div class="relative mx-auto flex max-w-[1440px] items-center gap-4 px-5 py-4 sm:gap-5 sm:px-8 sm:py-5 lg:px-10">
                 <a href="/" class="group flex shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bgn-gold-soft focus-visible:ring-offset-4 focus-visible:ring-offset-bgn-navy">
@@ -49,22 +48,13 @@ defineProps({
         </header>
 
         <main class="relative isolate min-h-[60vh]">
-            <img
-                :src="dairiBatikUrl"
-                alt=""
-                aria-hidden="true"
-                width="600"
-                height="600"
-                class="pointer-events-none absolute left-1/2 top-72 z-0 hidden w-[min(60vw,600px)] -translate-x-1/2 opacity-[0.025] mix-blend-multiply select-none sm:block"
-                loading="lazy"
-                decoding="async"
-            />
             <div class="relative z-10">
                 <slot />
             </div>
         </main>
 
         <footer class="border-t-2 border-bgn-gold bg-bgn-navy text-white">
+            <div aria-hidden="true" class="public-batik-footer-edge"></div>
             <div class="mx-auto flex max-w-[1440px] flex-col gap-6 px-5 py-8 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
                 <div class="flex items-center gap-3">
                     <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-bgn-gold-soft/60 bg-bgn-cream p-1">

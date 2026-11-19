@@ -190,10 +190,11 @@ onBeforeUnmount(() => revealObserver?.disconnect());
 
     <div>
         <!-- Hero menu -->
-        <section class="public-page-enter relative overflow-hidden bg-bgn-surface">
-            <div class="relative mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+        <section class="relative overflow-hidden bg-bgn-surface">
+            <div aria-hidden="true" class="public-batik-hero pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[min(44vw,560px)] lg:block"></div>
+            <div class="relative z-10 mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
                 <div v-if="menu" class="grid items-end gap-7 border-b border-bgn-line pb-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.55fr)] lg:gap-10 lg:pb-10">
-                    <div class="min-w-0 max-w-5xl">
+                    <div class="public-page-enter min-w-0 max-w-5xl">
                         <div class="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-bgn-gold-dark sm:text-[11px]">
                             <svg viewBox="0 0 24 24" fill="none" class="h-3.5 w-3.5 shrink-0" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                                 <path d="M7 3.75h7l4 4v12.5H7a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z"></path>
@@ -213,7 +214,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                         </p>
                     </div>
 
-                    <div class="border-l-2 border-bgn-gold bg-bgn-navy px-5 py-4 text-white sm:px-6 sm:py-5 lg:justify-self-end lg:w-full lg:max-w-[360px]">
+                    <div class="public-page-enter public-hero-date border-l-2 border-bgn-gold bg-bgn-navy px-5 py-4 text-white sm:px-6 sm:py-5 lg:justify-self-end lg:w-full lg:max-w-[360px]">
                         <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-bgn-gold-soft">
                             Menu Hari Ini
                         </p>
@@ -223,7 +224,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                     </div>
                 </div>
 
-                <div v-else class="max-w-5xl">
+                <div v-else class="public-page-enter max-w-5xl">
                     <div class="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-bgn-gold-dark sm:text-[11px]">
                         <svg viewBox="0 0 24 24" fill="none" class="h-3.5 w-3.5 shrink-0" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                             <path d="M7 3.75h7l4 4v12.5H7a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z"></path>
@@ -245,8 +246,8 @@ onBeforeUnmount(() => revealObserver?.disconnect());
         </section>
 
         <!-- Portion cards -->
-        <section v-if="menu" class="public-scroll-reveal mx-auto max-w-[1440px] px-5 pb-5 pt-10 sm:px-8 sm:pt-12 lg:px-10">
-            <div class="mb-9">
+        <section v-if="menu" class="public-scroll-reveal public-scroll-reveal--stagger mx-auto max-w-[1440px] px-5 pb-5 pt-10 sm:px-8 sm:pt-12 lg:px-10">
+            <div class="public-reveal-item mb-9">
                 <p class="text-xs font-bold uppercase tracking-[0.16em] text-bgn-gold-dark">
                     Komposisi makanan
                 </p>
@@ -260,9 +261,10 @@ onBeforeUnmount(() => revealObserver?.disconnect());
 
             <div class="grid items-start gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-5">
                 <article
-                    v-for="portion in portions"
+                    v-for="(portion, index) in portions"
                     :key="portion.key"
-                    class="group overflow-hidden rounded-xl border border-bgn-line bg-white shadow-[0_4px_16px_rgba(20,43,82,0.05)] transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-bgn-gold/40 hover:shadow-[0_8px_22px_rgba(20,43,82,0.08)] motion-reduce:transform-none"
+                    :style="{ '--public-reveal-delay': `${(index + 1) * 55}ms` }"
+                    class="public-reveal-item group overflow-hidden rounded-xl border border-bgn-line bg-white shadow-[0_4px_16px_rgba(20,43,82,0.05)] transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-bgn-gold/40 hover:shadow-[0_8px_22px_rgba(20,43,82,0.08)] motion-reduce:transform-none"
                 >
                     <div class="flex items-center justify-between gap-3 border-b border-bgn-gold/35 bg-bgn-navy px-5 py-3.5">
                         <div>
@@ -430,6 +432,12 @@ onBeforeUnmount(() => revealObserver?.disconnect());
             v-if="menu"
             :documentations="menu.kitchen_documentations || []"
         />
+
+        <div
+            v-if="menu"
+            aria-hidden="true"
+            class="public-scroll-reveal public-batik-divider"
+        ></div>
 
         <!-- Nutrition transparency -->
         <section
