@@ -44,6 +44,16 @@ const portions = [
     },
 ];
 
+const nutrientDefinitions = [
+    { key: 'energy', label: 'Energi Total', field: 'calories', indicator: 'bg-amber-500' },
+    { key: 'protein', label: 'Protein', field: 'protein', indicator: 'bg-emerald-500' },
+    { key: 'carbs', label: 'Karbohidrat', field: 'carbs', indicator: 'bg-sky-500' },
+    { key: 'fat', label: 'Lemak Sehat', field: 'fat', indicator: 'bg-amber-600' },
+    { key: 'fiber', label: 'Serat Pangan', field: null, indicator: 'bg-emerald-600' },
+    { key: 'iron', label: 'Zat Besi (Fe)', field: null, indicator: 'bg-rose-500' },
+    { key: 'calcium', label: 'Kalsium (Ca)', field: null, indicator: 'bg-amber-400' },
+];
+
 const formatDate = (value) => {
     if (!value) return '-';
 
@@ -118,6 +128,23 @@ const getPhoto = (item) => {
 };
 
 const menuDate = computed(() => formatDate(props.menu?.menu_date));
+
+const nutritionRows = computed(() => {
+    const items = props.menu?.items || [];
+
+    return nutrientDefinitions.map((nutrient) => {
+        const sources = nutrient.field
+            ? [...new Set(
+                items
+                    .filter((item) => Number(item[nutrient.field]) > 0)
+                    .map((item) => item.menu_item?.name?.trim())
+                    .filter(Boolean),
+            )]
+            : [];
+
+        return { ...nutrient, sources };
+    });
+});
 </script>
 
 <template>
@@ -125,57 +152,54 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
 
     <div>
         <!-- Hero menu -->
-        <section class="relative overflow-hidden bg-gradient-to-br from-[#edf2f9] via-white to-[#f8f5ee]">
-            <div class="absolute inset-0 opacity-[0.035]" style="background-image: radial-gradient(#173060 1px, transparent 1px); background-size: 18px 18px;"></div>
-
-            <div class="relative mx-auto max-w-[1280px] px-5 py-12 sm:px-8 sm:py-16 lg:py-20">
+        <section class="public-page-enter relative overflow-hidden bg-[#f8fafc]">
+            <div class="relative mx-auto max-w-7xl px-5 py-6 sm:px-8 sm:py-7 lg:px-10">
                 <div class="max-w-5xl">
-                    <div class="inline-flex items-center gap-2 rounded-full border border-[#c89446]/40 bg-[#c89446]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#8b6128]">
-                        <span class="h-2 w-2 rounded-full bg-[#c89446]"></span>
-                        Informasi Menu Harian
+                    <div class="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-[#a64c14] sm:text-[11px]">
+                        <svg viewBox="0 0 24 24" fill="none" class="h-3.5 w-3.5 shrink-0" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                            <path d="M7 3.75h7l4 4v12.5H7a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z"></path>
+                            <path d="M14 3.75v4h4M8.5 12h7M8.5 15.5h7"></path>
+                        </svg>
+                        <span>DOKUMEN SAJIAN RESMI MBG</span>
+                        <span aria-hidden="true" class="text-[#c89446]">•</span>
+                        <span>MENU PAKET STANDAR NASIONAL</span>
                     </div>
 
                     <template v-if="menu">
-                        <h1 class="mt-5 text-4xl font-black leading-[1.08] tracking-tight text-[#142b52] sm:text-5xl lg:text-6xl">
+                        <h1 class="mt-2 text-2xl font-bold leading-tight tracking-tight text-[#142b52] sm:text-[28px]">
                             {{ menu.title }}
                         </h1>
 
-                        <p v-if="menu.description" class="mt-4 max-w-3xl text-sm leading-7 text-slate-600 sm:text-base">
+                        <p v-if="menu.description" class="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
                             {{ menu.description }}
                         </p>
 
-                        <div class="mt-7 inline-flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-5 py-4 shadow-[0_8px_30px_rgba(20,43,82,0.07)]">
-                            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#173060]/5 text-[#173060]">
-                                <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" stroke="currentColor" stroke-width="1.8">
-                                    <rect x="3.5" y="5" width="17" height="16" rx="2"></rect>
-                                    <path d="M7.5 3v4M16.5 3v4M3.5 10h17"></path>
-                                </svg>
-                            </span>
-                            <div>
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                                    Tanggal penyajian
-                                </p>
-                                <p class="mt-1 text-sm font-bold text-[#173060]">
-                                    {{ menuDate }}
-                                </p>
-                            </div>
-                        </div>
+                        <div class="mt-4 border-t border-slate-200"></div>
+
+                        <p class="mt-5 inline-flex items-center gap-2 rounded-full bg-[#142b52] px-3 py-1 text-sm font-semibold text-[#ffd35a] sm:text-base">
+                            <svg viewBox="0 0 24 24" fill="none" class="h-4 w-4 shrink-0" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <rect x="4" y="5.5" width="16" height="15" rx="2"></rect>
+                                <path d="M8 3.5v4M16 3.5v4M4 10h16"></path>
+                            </svg>
+                            Menu Hari Ini: {{ menuDate }}
+                        </p>
                     </template>
 
                     <template v-else>
-                        <h1 class="mt-6 text-3xl font-black leading-tight tracking-tight text-[#173060] sm:text-5xl">
+                        <h1 class="mt-2 text-2xl font-bold leading-tight tracking-tight text-[#173060] sm:text-[28px]">
                             Informasi Menu Makan Bergizi Gratis
                         </h1>
                         <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
                             Informasi menu dan kandungan gizi akan ditampilkan setelah menu harian dipublikasikan oleh SPPG.
                         </p>
+                        <div class="mt-4 border-t border-slate-200"></div>
                     </template>
                 </div>
             </div>
         </section>
 
         <!-- Portion cards -->
-        <section v-if="menu" class="mx-auto max-w-[1280px] px-5 py-14 sm:px-8 lg:py-20">
+        <section v-if="menu" class="public-page-enter public-page-enter-delayed mx-auto max-w-7xl px-5 pb-5 pt-10 sm:px-8 sm:pt-12 lg:px-10">
             <div class="mb-9">
                 <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#a87532]">
                     Komposisi makanan
@@ -192,40 +216,39 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
                 <article
                     v-for="portion in portions"
                     :key="portion.key"
-                    class="overflow-hidden rounded-[22px] border border-slate-200/80 bg-white shadow-[0_12px_40px_rgba(20,43,82,0.06)] transition-shadow duration-300 hover:shadow-[0_18px_48px_rgba(20,43,82,0.10)]"
+                    class="group overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-[0_10px_30px_rgba(20,43,82,0.06)] transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(20,43,82,0.10)]"
                 >
-                    <div
-                        class="border-b border-[#e7ebf2] bg-[#f5f7fb] px-6 py-6"
-                    >
-                        <p
-                            class="text-[10px] font-bold uppercase tracking-[0.18em] text-[#a87532]"
-                        >
-                            {{ portion.subtitle }}
-                        </p>
-                        <h3 class="mt-2 text-2xl font-black tracking-tight text-[#142b52]">
-                            {{ portion.title }}
-                        </h3>
-                        <p class="mt-2 text-sm text-slate-500">
+                    <div class="flex items-center justify-between gap-3 border-b border-[#c89446]/40 bg-[#142b52] px-5 py-3.5">
+                        <div>
+                            <p class="text-[9px] font-bold uppercase tracking-[0.16em] text-[#e4c58f]">
+                                {{ portion.subtitle }}
+                            </p>
+                            <h3 class="mt-1 text-base font-bold tracking-tight text-white">
+                                {{ portion.title }}
+                            </h3>
+                        </div>
+                        <p class="text-right text-[10px] text-blue-100/75">
                             {{ getItems(portion.key).length }} jenis makanan
                         </p>
                     </div>
 
-                    <div class="p-6">
+                    <div class="p-4 sm:p-5">
                         <div
                             v-if="getItems(portion.key).length"
-                            class="space-y-5"
+                            class="space-y-4"
                         >
                             <div
                                 v-for="item in getItems(portion.key)"
                                 :key="item.id"
-                                class="flex gap-4 border-b border-slate-100 pb-5 last:border-0 last:pb-0"
+                                class="border-b border-slate-100 pb-4 last:border-0 last:pb-0"
                             >
-                                <div class="h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-[#f1f3f6] sm:h-28 sm:w-28">
+                                <div class="aspect-[2.2/1] w-full overflow-hidden rounded-xl bg-[#f1f3f6]">
                                     <img
                                         v-if="getPhoto(item)"
                                         :src="getPhoto(item)"
                                         :alt="item.menu_item?.name || 'Foto makanan'"
-                                        class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                                        loading="lazy"
+                                        class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                                     />
                                     <div v-else class="flex h-full w-full items-center justify-center text-slate-300">
                                         <svg viewBox="0 0 24 24" fill="none" class="h-7 w-7" stroke="currentColor" stroke-width="1.5">
@@ -236,17 +259,19 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
                                     </div>
                                 </div>
 
-                                <div class="min-w-0 flex-1">
-                                    <h4 class="text-base font-bold leading-snug text-[#142b52]">
-                                        {{ item.menu_item?.name || 'Makanan' }}
-                                    </h4>
-                                    <p v-if="item.menu_item?.category" class="mt-1 text-xs text-slate-400">
-                                        {{ item.menu_item.category }}
-                                    </p>
-                                    <p class="mt-1 text-xs text-slate-500">
-                                        {{ formatNumber(Number(item.quantity)) }} {{ item.unit }}
-                                    </p>
-                                    <p v-if="item.calories !== null && item.calories !== undefined" class="mt-1 text-xs font-semibold text-[#a87532]">
+                                <div class="flex items-start justify-between gap-4 px-1 pt-3">
+                                    <div class="min-w-0">
+                                        <h4 class="text-sm font-bold leading-snug text-[#142b52]">
+                                            {{ item.menu_item?.name || 'Makanan' }}
+                                        </h4>
+                                        <p v-if="item.menu_item?.category" class="mt-1 text-[11px] text-slate-400">
+                                            {{ item.menu_item.category }}
+                                        </p>
+                                        <p class="mt-1 text-xs text-slate-500">
+                                            {{ formatNumber(Number(item.quantity)) }} {{ item.unit }}
+                                        </p>
+                                    </div>
+                                    <p v-if="item.calories !== null && item.calories !== undefined" class="shrink-0 rounded-full bg-[#f8f4eb] px-3 py-1 text-[11px] font-bold text-[#8b6128]">
                                         {{ formatNumber(Number(item.calories)) }} kkal
                                     </p>
                                 </div>
@@ -262,14 +287,14 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
                             </p>
                         </div>
 
-                        <div v-if="getItems(portion.key).length" class="mt-7 border-t border-slate-100 pt-6">
-                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        <div v-if="getItems(portion.key).length" class="mt-4 border-t border-slate-100 pt-4">
+                            <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
                                 Ringkasan nutrisi
                             </p>
 
-                            <div class="mt-4 rounded-2xl border border-[#e7ebf2] bg-[#f5f7fb] p-5">
+                            <div class="mt-3 flex items-center justify-between gap-3 rounded-xl border border-[#e7ebf2] bg-[#f5f7fb] px-4 py-3">
                                 <p class="text-xs text-slate-500">Total energi</p>
-                                <p class="mt-1 text-3xl font-black tracking-tight text-[#142b52]">
+                                <p class="text-xl font-black tracking-tight text-[#142b52]">
                                     {{ getNutritionTotal(getItems(portion.key), 'calories') === null
                                         ? 'Belum lengkap'
                                         : formatNumber(getNutritionTotal(getItems(portion.key), 'calories')) }}
@@ -316,6 +341,21 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
                     </div>
                 </article>
             </div>
+
+            <aside class="mt-6 flex items-start gap-3 rounded-xl border border-[#e7dfd0] border-l-4 border-l-[#c89446] bg-[#fbf9f4] px-5 py-4">
+                <svg viewBox="0 0 24 24" fill="none" class="mt-0.5 h-5 w-5 shrink-0 text-[#9a6d2e]" stroke="currentColor" stroke-width="1.7">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M12 11v5M12 8h.01"></path>
+                </svg>
+                <div>
+                    <p class="text-sm font-bold text-[#795321]">
+                        Catatan informasi gizi
+                    </p>
+                    <p class="mt-1 text-xs leading-5 text-slate-600">
+                        Nilai kandungan gizi ditampilkan berdasarkan data yang dimasukkan oleh pengelola menu. Total nutrisi hanya ditampilkan apabila data untuk seluruh makanan pada kategori porsi tersebut telah diisi.
+                    </p>
+                </div>
+            </aside>
         </section>
 
         <!-- Empty state -->
@@ -339,19 +379,74 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
             v-if="menu"
             :documentations="menu.kitchen_documentations || []"
         />
-        <!-- Feedback penerima -->
-        <FeedbackForm :daily-menu-id="menu?.id ?? null" />
 
-        <!-- Information note -->
-        <section v-if="menu" class="mx-auto max-w-[1280px] px-5 pb-16 sm:px-8">
-            <div class="rounded-2xl border border-[#d8c39f]/50 bg-[#f8f4eb] p-6 sm:p-7">
-                <p class="text-sm font-bold text-[#795321]">
-                    Catatan informasi gizi
-                </p>
-                <p class="mt-1 text-xs leading-6 text-slate-600">
-                    Nilai kandungan gizi ditampilkan berdasarkan data yang dimasukkan oleh pengelola menu. Total nutrisi hanya ditampilkan apabila data untuk seluruh makanan pada kategori porsi tersebut telah diisi.
+        <!-- Nutrition transparency -->
+        <section
+            v-if="menu"
+            class="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12"
+        >
+            <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_4px_16px_-2px_rgba(15,30,61,0.05)]">
+                <header class="border-b border-slate-100 bg-[#fafbfd] px-5 py-5 sm:px-6">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                        Tabel Angka Kecukupan Gizi (AKG)
+                    </p>
+                    <h2 class="mt-1 text-lg font-bold text-[#112347] sm:text-xl">
+                        Transparansi Kandungan Nutrisi Lengkap
+                    </h2>
+                    <p class="mt-1 text-xs leading-5 text-slate-500 sm:text-sm">
+                        Perhitungan komprehensif berdasarkan pedoman standar Permenkes RI No. 28 Tahun 2019.
+                    </p>
+                </header>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full table-fixed border-collapse text-left text-xs sm:text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">
+                                <th scope="col" class="w-[36%] px-3 py-3 sm:px-6">
+                                    Unsur Nutrisi
+                                </th>
+                                <th scope="col" class="px-3 py-3 sm:px-6">
+                                    Sumber Bahan Makanan
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-slate-700">
+                            <tr
+                                v-for="nutrient in nutritionRows"
+                                :key="nutrient.key"
+                                class="transition-colors hover:bg-slate-50/60"
+                            >
+                                <th scope="row" class="px-3 py-3 font-semibold text-slate-900 sm:px-6 sm:py-3.5">
+                                    <span class="flex items-center gap-2">
+                                        <span
+                                            class="h-2 w-2 shrink-0 rounded-full"
+                                            :class="nutrient.indicator"
+                                        ></span>
+                                        <span>{{ nutrient.label }}</span>
+                                    </span>
+                                </th>
+                                <td class="break-words px-3 py-3 leading-5 sm:px-6 sm:py-3.5">
+                                    <span v-if="nutrient.sources.length">
+                                        {{ nutrient.sources.join(', ') }}
+                                    </span>
+                                    <span v-else class="text-slate-400">
+                                        {{ nutrient.field
+                                            ? 'Belum ada item dengan catatan unsur nutrisi ini.'
+                                            : 'Belum tersedia pada data menu.' }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="border-t border-slate-100 px-5 py-3 text-[11px] leading-5 text-slate-500 sm:px-6">
+                    Sumber untuk energi, protein, karbohidrat, dan lemak diambil dari item menu yang memiliki nilai nutrisi terkait. Data serat pangan, zat besi, dan kalsium belum tersedia pada struktur menu saat ini.
                 </p>
             </div>
         </section>
+
+        <!-- Feedback penerima -->
+        <FeedbackForm :daily-menu-id="menu?.id ?? null" />
     </div>
 </template>

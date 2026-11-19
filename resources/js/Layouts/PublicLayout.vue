@@ -1,4 +1,7 @@
 <script setup>
+const bgnLogoUrl = '/images/bgn-seal.png';
+const dairiBatikUrl = '/images/dairi-batik.png';
+
 defineProps({
     sppg: {
         type: Object,
@@ -9,68 +12,90 @@ defineProps({
 
 <template>
     <div class="min-h-screen bg-[#f7f8fa] text-slate-800">
-        <header class="relative overflow-hidden bg-[#142b52] text-white">
-            <div class="pointer-events-none absolute -right-24 -top-40 h-[420px] w-[420px] rounded-full border border-white/[0.08]"></div>
-            <div class="pointer-events-none absolute -right-8 -top-24 h-[320px] w-[320px] rounded-full border border-white/[0.08]"></div>
-            <div class="pointer-events-none absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-[#d5ad69] to-transparent"></div>
-
-            <div class="relative mx-auto flex max-w-[1280px] flex-col gap-6 px-5 py-6 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:py-7">
-                <a href="/" class="flex items-center gap-4">
-                    <div class="flex h-[58px] w-[58px] shrink-0 items-center justify-center rounded-2xl border border-[#d8b777]/50 bg-white/[0.08] text-lg font-black tracking-tight text-[#f1d39b]">
-                        BGN
-                    </div>
-
-                    <div>
-                        <p class="text-[9px] font-bold uppercase tracking-[0.28em] text-[#e4c58f]">
-                            Republik Indonesia
-                        </p>
-                        <p class="mt-1 text-lg font-bold leading-tight sm:text-xl">
-                            Badan Gizi Nasional
-                        </p>
-                        <p class="mt-1 text-xs text-blue-100/75">
-                            Informasi Menu Makan Bergizi Gratis
-                        </p>
+        <header class="relative overflow-hidden border-b-4 border-[#c89446] bg-gradient-to-r from-[#8a7049] via-[#3470bd] to-[#173060] text-white shadow-md">
+            <div class="relative mx-auto flex max-w-7xl items-center gap-4 px-5 py-4 sm:gap-5 sm:px-8 sm:py-5 lg:px-10">
+                <a href="/" class="group flex shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e4c58f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#173060]">
+                    <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#d8b777] bg-[#f8f6ef] p-1 shadow-[0_6px_18px_rgba(0,0,0,0.18)] transition-transform duration-500 ease-out group-hover:scale-105 sm:h-[88px] sm:w-20">
+                        <img
+                            :src="bgnLogoUrl"
+                            alt="Lambang Badan Gizi Nasional"
+                            width="1122"
+                            height="1112"
+                            class="h-full w-full object-contain"
+                            fetchpriority="high"
+                            decoding="async"
+                        />
                     </div>
                 </a>
 
-                <div class="max-w-full rounded-xl border border-white/10 bg-white/[0.07] px-5 py-4 lg:max-w-[430px]">
-                    <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-[#e4c58f]">
-                        Satuan Pelayanan Pemenuhan Gizi
-                    </p>
-                    <p class="mt-1.5 text-sm font-bold leading-snug text-white sm:text-base">
-                        {{ sppg?.name || 'Informasi SPPG' }}
-                    </p>
-                    <p v-if="sppg?.code" class="mt-1.5 text-[11px] text-blue-100/70">
+                <div class="min-w-0">
+                    <p v-if="sppg?.code" class="text-[10px] font-medium tracking-wide text-white/75">
                         ID SPPG: {{ sppg.code }}
                     </p>
-                    <p v-if="sppg?.address" class="mt-1 text-xs leading-relaxed text-blue-100/75">
-                        {{ sppg.address }}
+                    <p class="mt-0.5 text-base font-bold uppercase leading-tight sm:text-xl">
+                        Badan Gizi Nasional Republik Indonesia
                     </p>
+                    <div class="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+                        <p class="text-xs font-bold uppercase tracking-wide text-[#ffd35a] sm:text-sm">
+                            {{ sppg?.name || 'Informasi SPPG' }}
+                        </p>
+                        <p v-if="sppg?.address" class="flex items-baseline gap-2 text-[10px] leading-relaxed text-blue-50/80 sm:text-[11px]">
+                            <span aria-hidden="true">•</span>
+                            {{ sppg.address }}
+                        </p>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <main class="min-h-[60vh]">
-            <slot />
+        <main class="relative isolate min-h-[60vh]">
+            <img
+                :src="dairiBatikUrl"
+                alt=""
+                aria-hidden="true"
+                width="600"
+                height="600"
+                class="pointer-events-none absolute left-1/2 top-72 z-0 hidden w-[min(72vw,720px)] -translate-x-1/2 opacity-[0.045] mix-blend-multiply select-none sm:block"
+                loading="lazy"
+                decoding="async"
+            />
+            <div class="relative z-10">
+                <slot />
+            </div>
         </main>
 
-        <footer class="mt-16 bg-[#142b52] text-white">
-            <div class="mx-auto flex max-w-[1280px] flex-col gap-6 px-5 py-9 sm:px-8 md:flex-row md:items-center md:justify-between">
-                <div>
-                    <p class="text-sm font-bold">
-                        Informasi Menu Makan Bergizi Gratis
-                    </p>
-                    <p class="mt-1 text-xs text-blue-100/65">
-                        {{ sppg?.name || 'Satuan Pelayanan Pemenuhan Gizi' }}
-                    </p>
+        <footer class="border-t-2 border-[#c89446] bg-[#142b52] text-white">
+            <div class="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-8 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#d8b777]/60 bg-[#f8f6ef] p-1">
+                        <img
+                            :src="bgnLogoUrl"
+                            alt="Lambang Badan Gizi Nasional"
+                            width="1122"
+                            height="1112"
+                            class="h-full w-full object-contain"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold uppercase tracking-wide">
+                            Badan Gizi Nasional Republik Indonesia
+                        </p>
+                        <p class="mt-1 text-xs text-blue-100/65">
+                            Satuan Pelayanan Pemenuhan Gizi
+                        </p>
+                        <p class="mt-1 text-xs font-semibold text-[#e4c58f]">
+                            {{ sppg?.name || 'Satuan Pelayanan Pemenuhan Gizi' }}
+                        </p>
+                    </div>
                 </div>
 
                 <div class="text-xs leading-6 text-blue-100/65 md:text-right">
                     <p>Informasi menu dan kandungan gizi makanan</p>
-                    <p>© {{ new Date().getFullYear() }} — Informasi Pelayanan Gizi</p>
+                    <p>© {{ new Date().getFullYear() }} Badan Gizi Nasional Republik Indonesia</p>
                 </div>
             </div>
-            <div class="h-1 bg-[#c89b55]"></div>
         </footer>
     </div>
 </template>

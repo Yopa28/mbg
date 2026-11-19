@@ -47,14 +47,14 @@ const formatDateTime = (value) => {
 <template>
     <section
         v-if="documentations.length"
-        class="border-y border-slate-200/70 bg-[#f1f4f8]"
+        class="public-page-enter public-page-enter-delayed border-y border-slate-200/70 bg-[#f7f8fa]"
     >
-        <div class="mx-auto max-w-[1280px] px-5 py-14 sm:px-8 lg:py-20">
-            <div class="mb-9">
+        <div class="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+            <div class="mb-6">
                 <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#a87532]">
                     Transparansi proses dapur
                 </p>
-                <h2 class="mt-2 text-3xl font-black tracking-tight text-[#142b52] sm:text-4xl">
+                <h2 class="mt-2 text-2xl font-black tracking-tight text-[#142b52] sm:text-3xl">
                     Dokumentasi Kegiatan Dapur
                 </h2>
                 <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-500">
@@ -62,13 +62,13 @@ const formatDateTime = (value) => {
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <article
                     v-for="item in documentations"
                     :key="item.id"
-                    class="group overflow-hidden rounded-[22px] border border-slate-200/80 bg-white shadow-[0_10px_35px_rgba(20,43,82,0.05)] transition-shadow duration-300 hover:shadow-[0_16px_42px_rgba(20,43,82,0.10)]"
+                    class="group overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-[0_8px_24px_rgba(20,43,82,0.04)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(20,43,82,0.09)]"
                 >
-                    <div class="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
+                    <div class="relative aspect-[2/1] w-full overflow-hidden bg-slate-100">
                         <img
                             v-if="getPhotoUrl(item.photo_path)"
                             :src="getPhotoUrl(item.photo_path)"
@@ -82,16 +82,13 @@ const formatDateTime = (value) => {
                         >
                             Foto belum tersedia
                         </div>
-
-                        <div class="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/35 to-transparent"></div>
-
-                        <span class="absolute bottom-4 left-4 rounded-full border border-white/30 bg-white/95 px-3 py-1.5 text-[11px] font-bold text-[#142b52] shadow-sm">
-                            {{ getCategoryLabel(item.category) }}
-                        </span>
                     </div>
 
-                    <div class="p-5 sm:p-6">
-                        <h3 class="text-base font-bold leading-snug text-[#142b52]">
+                    <div class="p-4 sm:p-5">
+                        <span class="inline-flex rounded-full bg-[#f5f7fb] px-3 py-1 text-[10px] font-bold text-[#a87532]">
+                            {{ getCategoryLabel(item.category) }}
+                        </span>
+                        <h3 class="mt-2 text-base font-bold leading-snug text-[#142b52]">
                             {{ item.title || getCategoryLabel(item.category) }}
                         </h3>
 
@@ -104,7 +101,7 @@ const formatDateTime = (value) => {
 
                         <div
                             v-if="item.temperature !== null && item.temperature !== undefined"
-                            class="mt-5 flex items-center justify-between rounded-xl border border-[#e7ebf2] bg-[#f5f7fb] px-4 py-3"
+                            class="mt-4 flex items-center justify-between rounded-xl border border-[#e7ebf2] bg-[#f5f7fb] px-4 py-3"
                         >
                             <div>
                                 <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">
@@ -124,7 +121,7 @@ const formatDateTime = (value) => {
 
                         <p
                             v-if="item.captured_at"
-                            class="mt-5 border-t border-slate-100 pt-4 text-xs text-slate-400"
+                            class="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-400"
                         >
                             {{ formatDateTime(item.captured_at) }}
                         </p>
