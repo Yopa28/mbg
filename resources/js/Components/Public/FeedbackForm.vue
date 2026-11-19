@@ -103,7 +103,7 @@ const submit = () => {
                                     :class="form.category === category.value
                                         ? 'border-bgn-navy bg-bgn-navy text-white'
                                         : 'border-slate-200 bg-white text-slate-600 hover:border-bgn-gold hover:bg-bgn-surface hover:text-bgn-navy'"
-                                    class="min-h-11 rounded-md border px-3 py-2 text-xs font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bgn-gold focus-visible:ring-offset-2"
+                                    class="min-h-12 rounded-md border px-3 py-2 text-xs font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bgn-gold focus-visible:ring-offset-2"
                                 >
                                     {{ category.label }}
                                 </button>
@@ -129,14 +129,14 @@ const submit = () => {
                                 v-model="form.message"
                                 :aria-invalid="Boolean(form.errors.message)"
                                 :aria-describedby="form.errors.message ? 'feedback-message-error' : undefined"
-                                rows="4"
+                                rows="5"
                                 maxlength="2000"
                                 required
                                 placeholder="Tuliskan masukan Anda mengenai makanan atau pelayanan..."
                                 :class="form.errors.message
                                     ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10'
                                     : 'border-slate-200 focus:border-bgn-navy focus:ring-bgn-navy/10'"
-                                class="min-h-[120px] w-full resize-y rounded-md border bg-white px-3 py-3 text-sm leading-5 text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:ring-2"
+                                class="min-h-[148px] w-full resize-y rounded-md border bg-white px-3 py-3 text-sm leading-5 text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:ring-2"
                             ></textarea>
 
                             <p v-if="form.errors.message" id="feedback-message-error" role="alert" class="mt-2 text-xs text-red-600">
@@ -160,7 +160,7 @@ const submit = () => {
                                     :class="form.errors.name
                                         ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10'
                                         : 'border-slate-200 focus:border-bgn-navy focus:ring-bgn-navy/10'"
-                                    class="h-11 w-full rounded-md border bg-white px-3 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:ring-2"
+                                    class="h-12 w-full rounded-md border bg-white px-3 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:ring-2"
                                 />
                                 <p v-if="form.errors.name" id="feedback-name-error" role="alert" class="mt-2 text-xs text-red-600">
                                     {{ form.errors.name }}
@@ -182,7 +182,7 @@ const submit = () => {
                                     :class="form.errors.contact
                                         ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10'
                                         : 'border-slate-200 focus:border-bgn-navy focus:ring-bgn-navy/10'"
-                                    class="h-11 w-full rounded-md border bg-white px-3 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:ring-2"
+                                    class="h-12 w-full rounded-md border bg-white px-3 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:ring-2"
                                 />
                                 <p v-if="form.errors.contact" id="feedback-contact-error" role="alert" class="mt-2 text-xs text-red-600">
                                     {{ form.errors.contact }}
@@ -199,7 +199,7 @@ const submit = () => {
                                 type="submit"
                                 :disabled="form.processing"
                                 :aria-busy="form.processing"
-                                class="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-md bg-bgn-navy px-5 py-2.5 text-sm font-bold text-white transition-colors duration-150 hover:bg-bgn-navy-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bgn-gold focus-visible:ring-offset-2 active:bg-bgn-navy disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                                class="inline-flex min-h-12 w-full shrink-0 items-center justify-center gap-2 rounded-md bg-bgn-navy px-5 py-2.5 text-sm font-bold text-white transition-colors duration-150 hover:bg-bgn-navy-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bgn-gold focus-visible:ring-offset-2 active:bg-bgn-navy disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                             >
                                 {{ form.processing ? 'Mengirim...' : 'Kirim Ulasan Langsung ke Admin SPPG' }}
                                 <svg v-if="!form.processing" viewBox="0 0 24 24" fill="none" class="h-4 w-4 text-bgn-gold-soft" stroke="currentColor" stroke-width="2">

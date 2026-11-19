@@ -191,6 +191,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
     <div>
         <!-- Hero menu -->
         <section class="relative overflow-hidden bg-bgn-surface">
+            <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[54%] border-l border-bgn-line bg-white/65 lg:block"></div>
             <div aria-hidden="true" class="public-batik-hero pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[min(44vw,560px)] lg:block"></div>
             <div class="relative z-10 mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
                 <div v-if="menu" class="grid items-end gap-7 border-b border-bgn-line pb-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.55fr)] lg:gap-10 lg:pb-10">
@@ -458,7 +459,10 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                 </header>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full table-fixed border-collapse text-left text-xs sm:text-sm">
+                    <table class="min-w-[620px] w-full table-fixed border-collapse text-left text-xs sm:text-sm">
+                        <caption class="sr-only">
+                            Sumber bahan makanan untuk setiap unsur nutrisi pada menu.
+                        </caption>
                         <thead>
                             <tr class="border-b border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">
                                 <th scope="col" class="w-[36%] px-4 py-4 sm:px-8">

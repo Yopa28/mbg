@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import { getPublicPhotoUrl } from '@/Utils/publicPhotoUrl';
 
 const props = defineProps({
@@ -6,6 +7,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+});
+
+const hasPhotographicDocumentation = computed(() => {
+    return props.documentations.some((item) => getPublicPhotoUrl(item.photo_path));
 });
 
 const categories = [
@@ -50,11 +55,25 @@ const formatDateTime = (value) => {
                 </p>
             </div>
 
-            <div class="grid items-start grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div
+                class="grid items-start grid-cols-1 gap-5 md:grid-cols-2"
+                :class="documentations.length === 1
+                    ? 'xl:grid-cols-1'
+                    : documentations.length === 2
+                        ? 'xl:grid-cols-2'
+                        : hasPhotographicDocumentation
+                            ? 'xl:auto-rows-fr xl:grid-cols-3'
+                            : 'xl:grid-cols-3'"
+            >
                 <article
                     v-for="(item, index) in documentations"
                     :key="item.id"
                     :style="{ '--public-reveal-delay': `${Math.min(index + 1, 4) * 45}ms` }"
+                    :class="hasPhotographicDocumentation && documentations.length >= 3 && index === 0
+                        ? 'xl:col-span-2 xl:row-span-2 xl:flex xl:flex-col xl:self-stretch'
+                        : hasPhotographicDocumentation && documentations.length >= 3 && index < 3
+                            ? 'xl:col-start-3'
+                            : ''"
                     class="public-reveal-item group overflow-hidden rounded-xl border border-bgn-line bg-white shadow-sm transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-bgn-gold/40 hover:shadow-[0_8px_22px_rgba(20,43,82,0.08)] motion-reduce:transform-none"
                 >
                     <div class="group/photo relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
@@ -80,7 +99,12 @@ const formatDateTime = (value) => {
                         </div>
                     </div>
 
-                    <div class="p-4 sm:p-5">
+                    <div
+                        :class="hasPhotographicDocumentation && documentations.length >= 3 && index === 0
+                            ? 'xl:flex xl:flex-1 xl:flex-col xl:justify-between'
+                            : ''"
+                        class="p-4 sm:p-5"
+                    >
                         <span class="inline-flex rounded-sm border-l-2 border-bgn-gold bg-bgn-surface px-2 py-1 text-[10px] font-semibold text-slate-600">
                             {{ getCategoryLabel(item.category) }}
                         </span>
