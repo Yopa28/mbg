@@ -125,18 +125,18 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
 
     <div>
         <!-- Hero menu -->
-        <section class="relative overflow-hidden bg-[#f3f5f8]">
+        <section class="relative overflow-hidden bg-gradient-to-br from-[#edf2f9] via-white to-[#f8f5ee]">
             <div class="absolute inset-0 opacity-[0.035]" style="background-image: radial-gradient(#173060 1px, transparent 1px); background-size: 18px 18px;"></div>
 
-            <div class="relative mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
-                <div class="max-w-4xl">
+            <div class="relative mx-auto max-w-[1280px] px-5 py-12 sm:px-8 sm:py-16 lg:py-20">
+                <div class="max-w-5xl">
                     <div class="inline-flex items-center gap-2 rounded-full border border-[#c89446]/40 bg-[#c89446]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#8b6128]">
                         <span class="h-2 w-2 rounded-full bg-[#c89446]"></span>
                         Informasi Menu Harian
                     </div>
 
                     <template v-if="menu">
-                        <h1 class="mt-6 text-3xl font-black leading-tight tracking-tight text-[#173060] sm:text-5xl">
+                        <h1 class="mt-5 text-4xl font-black leading-[1.08] tracking-tight text-[#142b52] sm:text-5xl lg:text-6xl">
                             {{ menu.title }}
                         </h1>
 
@@ -144,7 +144,7 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
                             {{ menu.description }}
                         </p>
 
-                        <div class="mt-6 inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+                        <div class="mt-7 inline-flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-5 py-4 shadow-[0_8px_30px_rgba(20,43,82,0.07)]">
                             <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#173060]/5 text-[#173060]">
                                 <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" stroke="currentColor" stroke-width="1.8">
                                     <rect x="3.5" y="5" width="17" height="16" rx="2"></rect>
@@ -175,67 +175,57 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
         </section>
 
         <!-- Portion cards -->
-        <section v-if="menu" class="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
-            <div class="mb-8">
+        <section v-if="menu" class="mx-auto max-w-[1280px] px-5 py-14 sm:px-8 lg:py-20">
+            <div class="mb-9">
                 <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#a87532]">
                     Komposisi makanan
                 </p>
-                <h2 class="mt-2 text-2xl font-black text-[#173060] sm:text-3xl">
+                <h2 class="mt-2 text-3xl font-black tracking-tight text-[#142b52] sm:text-4xl">
                     Informasi Setiap Porsi
                 </h2>
-                <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+                <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-500">
                     Rincian makanan dan total kandungan gizi ditampilkan berdasarkan kategori porsi.
                 </p>
             </div>
 
-            <div class="grid gap-6 lg:grid-cols-3">
+            <div class="grid items-start gap-6 lg:grid-cols-3 lg:gap-5">
                 <article
                     v-for="portion in portions"
                     :key="portion.key"
-                    class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+                    class="overflow-hidden rounded-[22px] border border-slate-200/80 bg-white shadow-[0_12px_40px_rgba(20,43,82,0.06)] transition-shadow duration-300 hover:shadow-[0_18px_48px_rgba(20,43,82,0.10)]"
                 >
                     <div
-                        class="border-b px-5 py-5"
-                        :class="{
-                            'border-blue-100 bg-blue-50/70': portion.accent === 'blue',
-                            'border-emerald-100 bg-emerald-50/70': portion.accent === 'emerald',
-                            'border-amber-100 bg-amber-50/70': portion.accent === 'amber',
-                        }"
+                        class="border-b border-[#e7ebf2] bg-[#f5f7fb] px-6 py-6"
                     >
                         <p
-                            class="text-[10px] font-bold uppercase tracking-[0.18em]"
-                            :class="{
-                                'text-blue-700': portion.accent === 'blue',
-                                'text-emerald-700': portion.accent === 'emerald',
-                                'text-amber-700': portion.accent === 'amber',
-                            }"
+                            class="text-[10px] font-bold uppercase tracking-[0.18em] text-[#a87532]"
                         >
                             {{ portion.subtitle }}
                         </p>
-                        <h3 class="mt-2 text-xl font-black text-[#173060]">
+                        <h3 class="mt-2 text-2xl font-black tracking-tight text-[#142b52]">
                             {{ portion.title }}
                         </h3>
-                        <p class="mt-1 text-xs text-slate-500">
+                        <p class="mt-2 text-sm text-slate-500">
                             {{ getItems(portion.key).length }} jenis makanan
                         </p>
                     </div>
 
-                    <div class="p-5">
+                    <div class="p-6">
                         <div
                             v-if="getItems(portion.key).length"
-                            class="space-y-4"
+                            class="space-y-5"
                         >
                             <div
                                 v-for="item in getItems(portion.key)"
                                 :key="item.id"
-                                class="flex gap-3 border-b border-slate-100 pb-4 last:border-0 last:pb-0"
+                                class="flex gap-4 border-b border-slate-100 pb-5 last:border-0 last:pb-0"
                             >
-                                <div class="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-slate-100">
+                                <div class="h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-[#f1f3f6] sm:h-28 sm:w-28">
                                     <img
                                         v-if="getPhoto(item)"
                                         :src="getPhoto(item)"
                                         :alt="item.menu_item?.name || 'Foto makanan'"
-                                        class="h-full w-full object-cover"
+                                        class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                                     />
                                     <div v-else class="flex h-full w-full items-center justify-center text-slate-300">
                                         <svg viewBox="0 0 24 24" fill="none" class="h-7 w-7" stroke="currentColor" stroke-width="1.5">
@@ -247,7 +237,7 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
                                 </div>
 
                                 <div class="min-w-0 flex-1">
-                                    <h4 class="text-sm font-bold text-slate-800">
+                                    <h4 class="text-base font-bold leading-snug text-[#142b52]">
                                         {{ item.menu_item?.name || 'Makanan' }}
                                     </h4>
                                     <p v-if="item.menu_item?.category" class="mt-1 text-xs text-slate-400">
@@ -272,14 +262,14 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
                             </p>
                         </div>
 
-                        <div v-if="getItems(portion.key).length" class="mt-6 border-t border-slate-200 pt-5">
+                        <div v-if="getItems(portion.key).length" class="mt-7 border-t border-slate-100 pt-6">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-500">
                                 Ringkasan nutrisi
                             </p>
 
-                            <div class="mt-4 rounded-xl bg-[#f4f6fa] p-4">
+                            <div class="mt-4 rounded-2xl border border-[#e7ebf2] bg-[#f5f7fb] p-5">
                                 <p class="text-xs text-slate-500">Total energi</p>
-                                <p class="mt-1 text-2xl font-black text-[#173060]">
+                                <p class="mt-1 text-3xl font-black tracking-tight text-[#142b52]">
                                     {{ getNutritionTotal(getItems(portion.key), 'calories') === null
                                         ? 'Belum lengkap'
                                         : formatNumber(getNutritionTotal(getItems(portion.key), 'calories')) }}
@@ -288,7 +278,7 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
                             </div>
 
                             <div class="mt-3 grid grid-cols-3 gap-2">
-                                <div class="rounded-lg border border-slate-100 p-3">
+                                <div class="rounded-xl border border-slate-100 bg-white p-3">
                                     <p class="text-[10px] text-slate-400">Protein</p>
                                     <p class="mt-1 text-sm font-bold text-slate-800">
                                         {{ getNutritionTotal(getItems(portion.key), 'protein') === null
@@ -314,7 +304,7 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
                                 </div>
                             </div>
 
-                            <div class="mt-3 flex items-center justify-between rounded-lg border border-slate-100 px-3 py-3">
+                            <div class="mt-3 flex items-center justify-between rounded-xl border border-slate-100 bg-white px-4 py-3">
                                 <span class="text-xs text-slate-500">Total berat makanan</span>
                                 <span class="text-sm font-bold text-[#173060]">
                                     {{ getWeightInGrams(getItems(portion.key)) === null
@@ -353,8 +343,8 @@ const menuDate = computed(() => formatDate(props.menu?.menu_date));
         <FeedbackForm :daily-menu-id="menu?.id ?? null" />
 
         <!-- Information note -->
-        <section v-if="menu" class="mx-auto max-w-7xl px-5 pb-14 sm:px-8">
-            <div class="rounded-xl border border-[#c89446]/30 bg-[#c89446]/10 p-5">
+        <section v-if="menu" class="mx-auto max-w-[1280px] px-5 pb-16 sm:px-8">
+            <div class="rounded-2xl border border-[#d8c39f]/50 bg-[#f8f4eb] p-6 sm:p-7">
                 <p class="text-sm font-bold text-[#795321]">
                     Catatan informasi gizi
                 </p>
