@@ -11,10 +11,10 @@ defineProps({
 
 <template>
     <div class="public-page-motion min-h-screen bg-bgn-paper text-slate-800">
-        <header class="relative border-b-2 border-bgn-gold bg-bgn-navy text-white shadow-sm">
+        <header class="relative border-b border-bgn-gold/80 bg-bgn-navy text-white shadow-[0_6px_18px_rgba(23,45,80,0.08)]">
             <div class="relative mx-auto flex max-w-[1440px] items-center gap-4 px-5 py-4 sm:gap-5 sm:px-8 sm:py-5 lg:px-10">
                 <a href="/" class="group flex shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bgn-gold-soft focus-visible:ring-offset-4 focus-visible:ring-offset-bgn-navy">
-                    <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-bgn-gold-soft bg-bgn-cream p-1 shadow-sm transition-transform duration-200 ease-out group-hover:scale-[1.02] motion-reduce:transform-none sm:h-[88px] sm:w-20">
+                    <div class="flex h-16 w-16 items-center justify-center rounded-full border border-bgn-gold-soft/90 bg-bgn-cream p-1 transition-transform duration-300 ease-out group-hover:scale-[1.02] motion-reduce:transform-none sm:h-[88px] sm:w-20">
                         <img
                             :src="bgnLogoUrl"
                             alt="Lambang Badan Gizi Nasional"
@@ -28,7 +28,7 @@ defineProps({
                 </a>
 
                 <div class="min-w-0">
-                    <p v-if="sppg?.code" class="text-[10px] font-medium tracking-wide text-white/75">
+                    <p v-if="sppg?.code" class="text-[10px] font-bold uppercase tracking-[0.14em] text-bgn-gold-soft/90">
                         ID SPPG: {{ sppg.code }}
                     </p>
                     <p class="mt-0.5 text-base font-bold uppercase leading-tight sm:text-xl">
@@ -53,8 +53,8 @@ defineProps({
             </div>
         </main>
 
-        <footer class="border-t-2 border-bgn-gold bg-bgn-navy text-white">
-            <div class="mx-auto flex max-w-[1440px] flex-col gap-6 px-5 py-8 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
+        <footer class="border-t border-bgn-gold/70 bg-bgn-navy text-white">
+            <div class="mx-auto flex max-w-[1440px] flex-col gap-7 px-5 py-9 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
                 <div class="flex items-center gap-3">
                     <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-bgn-gold-soft/60 bg-bgn-cream p-1">
                         <img

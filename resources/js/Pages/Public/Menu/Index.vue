@@ -1,12 +1,10 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import KitchenDocumentation from '@/Components/Public/KitchenDocumentation.vue';
 import FeedbackForm from '@/Components/Public/FeedbackForm.vue';
 import { getPublicPhotoUrl } from '@/Utils/publicPhotoUrl';
-
-const geometricOrnamentUrl = '/images/mbg-geometric-ornament.png';
 
 defineOptions({
     layout: PublicLayout,
@@ -93,6 +91,45 @@ const getNutritionTotal = (items, field) => {
     return items.reduce((total, item) => total + Number(item[field]), 0);
 };
 
+const animatedNutrition = reactive({});
+const nutritionAnimations = new WeakMap();
+
+const getAnimatedNutrition = (portionKey, field) => {
+    const items = getItems(portionKey);
+    const total = getNutritionTotal(items, field);
+    if (total === null) return null;
+
+    const key = `${portionKey}-${field}`;
+    return animatedNutrition[key] === undefined ? total : animatedNutrition[key];
+};
+
+const animateNutrition = (element) => {
+    if (nutritionAnimations.has(element)) return;
+
+    const value = Number(element.dataset.nutritionValue);
+    const key = element.dataset.nutritionKey;
+    if (!Number.isFinite(value) || !key) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        animatedNutrition[key] = value;
+        return;
+    }
+
+    nutritionAnimations.set(element, true);
+    const startedAt = performance.now();
+    const duration = 650;
+
+    const update = (now) => {
+        const progress = Math.min((now - startedAt) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        animatedNutrition[key] = value * eased;
+        if (progress < 1) requestAnimationFrame(update);
+        else animatedNutrition[key] = value;
+    };
+
+    requestAnimationFrame(update);
+};
+
 const getPhoto = (item) => {
     return getPublicPhotoUrl(item?.menu_item?.photo);
 };
@@ -137,6 +174,7 @@ onMounted(() => {
 
             entry.target.classList.remove('is-pending');
             entry.target.classList.add('is-visible');
+            entry.target.querySelectorAll('[data-nutrition-value]').forEach(animateNutrition);
             observer.unobserve(entry.target);
         });
     }, {
@@ -150,6 +188,7 @@ onMounted(() => {
 
         if (isInViewport) {
             element.classList.add('is-visible');
+            element.querySelectorAll('[data-nutrition-value]').forEach(animateNutrition);
             return;
         }
 
@@ -166,48 +205,34 @@ onBeforeUnmount(() => revealObserver?.disconnect());
 
     <div>
         <!-- Hero menu -->
-        <section class="relative overflow-hidden bg-bgn-surface">
-            <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[38%] border-l border-bgn-gold/10 bg-bgn-gold-pale/30 lg:block"></div>
-            <div aria-hidden="true" class="public-geometric-hero pointer-events-none hidden lg:block">
-                <img
-                    :src="geometricOrnamentUrl"
-                    alt=""
-                    width="600"
-                    height="600"
-                    class="h-full w-full object-contain"
-                    fetchpriority="high"
-                    decoding="async"
-                />
-            </div>
-            <div class="relative z-10 mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
-                <div v-if="menu" class="grid items-end gap-7 border-b border-bgn-line pb-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.55fr)] lg:gap-10 lg:pb-10">
-                    <div class="public-page-enter min-w-0 max-w-5xl">
-                        <div class="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.08em] text-bgn-gold-dark sm:text-[11px]">
+        <section class="public-hero-ambient relative overflow-hidden border-b border-bgn-line">
+            <div class="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 sm:py-12 lg:px-10 lg:py-16">
+                <div v-if="menu" class="grid items-end gap-8 lg:grid-cols-[minmax(0,1.55fr)_minmax(260px,0.45fr)] lg:gap-12">
+                    <div class="public-page-enter min-w-0">
+                        <div class="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-bgn-gold-dark sm:text-[11px]">
                             <svg viewBox="0 0 24 24" fill="none" class="h-3.5 w-3.5 shrink-0" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                                 <path d="M7 3.75h7l4 4v12.5H7a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z"></path>
                                 <path d="M14 3.75v4h4M8.5 12h7M8.5 15.5h7"></path>
                             </svg>
                             <span>DOKUMEN SAJIAN RESMI MBG</span>
-                            <span aria-hidden="true" class="text-bgn-gold">•</span>
-                            <span>MENU PAKET STANDAR NASIONAL</span>
                         </div>
 
-                        <h1 class="mt-4 break-words text-3xl font-bold leading-tight tracking-tight text-bgn-navy sm:text-4xl lg:text-5xl">
+                        <div class="public-gold-line mt-5 h-px w-20 bg-bgn-gold"></div>
+
+                        <h1 class="mt-5 break-words text-4xl font-bold leading-[1.04] tracking-[-0.035em] text-bgn-navy sm:text-5xl lg:text-[64px]">
                             {{ menu.title }}
                         </h1>
 
-                        <p v-if="menu.description" class="mt-4 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">
+                        <p v-if="menu.description" class="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
                             {{ menu.description }}
                         </p>
                     </div>
 
-                    <div class="public-page-enter public-hero-date border-l-2 border-bgn-gold bg-bgn-navy px-5 py-4 text-white sm:px-6 sm:py-5 lg:justify-self-end lg:w-full lg:max-w-[300px]">
-                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-bgn-gold-soft">
-                            Menu Hari Ini
-                        </p>
-                        <p class="mt-2 text-sm font-semibold leading-6 sm:text-base">
-                            {{ menuDate }}
-                        </p>
+                    <div class="public-page-enter public-hero-date relative overflow-hidden border-l-[3px] border-bgn-gold bg-bgn-navy px-6 py-6 text-white shadow-[0_14px_32px_rgba(23,45,80,0.12)] sm:px-7 sm:py-7 lg:justify-self-end lg:w-full">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-bgn-gold-soft">Menu Hari Ini</p>
+                        <p class="mt-3 text-lg font-semibold leading-7 sm:text-xl">{{ menuDate }}</p>
+                        <div class="mt-5 h-px w-full bg-white/10"></div>
+                        <p class="mt-3 text-[10px] font-bold uppercase tracking-[0.16em] text-white/55">Jadwal penyajian resmi</p>
                     </div>
                 </div>
 
@@ -234,16 +259,12 @@ onBeforeUnmount(() => revealObserver?.disconnect());
 
         <!-- Portion cards -->
         <section v-if="menu" class="public-scroll-reveal public-scroll-reveal--stagger mx-auto max-w-[1440px] px-5 pb-5 pt-10 sm:px-8 sm:pt-12 lg:px-10">
-            <div class="public-reveal-item mb-9">
-                <p class="text-xs font-bold uppercase tracking-[0.16em] text-bgn-gold-dark">
-                    Komposisi makanan
-                </p>
-                <h2 class="mt-2 text-2xl font-bold tracking-tight text-bgn-navy sm:text-3xl">
-                    Informasi Setiap Porsi
-                </h2>
-                <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-500">
-                    Rincian makanan dan total kandungan gizi ditampilkan berdasarkan kategori porsi.
-                </p>
+            <div class="public-reveal-item mb-8 flex flex-col gap-4 border-b border-bgn-line pb-6 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-bgn-gold-dark">Komposisi makanan</p>
+                    <h2 class="mt-2 text-3xl font-bold tracking-[-0.025em] text-bgn-navy sm:text-[38px]">Informasi Setiap Porsi</h2>
+                </div>
+                <p class="max-w-md text-sm leading-6 text-slate-500 sm:text-right">Rincian susunan makanan dan kandungan gizi berdasarkan kategori porsi.</p>
             </div>
 
             <div class="grid items-start gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-5">
@@ -251,9 +272,9 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                     v-for="(portion, index) in portions"
                     :key="portion.key"
                     :style="{ '--public-reveal-delay': `${(index + 1) * 55}ms` }"
-                    class="public-reveal-item group overflow-hidden rounded-xl border border-bgn-line bg-white shadow-[0_4px_16px_rgba(20,43,82,0.05)] transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-bgn-gold/40 hover:shadow-[0_8px_22px_rgba(20,43,82,0.08)] motion-reduce:transform-none"
+                    class="public-reveal-item group overflow-hidden rounded-lg border border-bgn-line bg-white shadow-[0_8px_28px_rgba(23,45,80,0.06)] transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-bgn-gold/50 hover:shadow-[0_16px_36px_rgba(23,45,80,0.12)] motion-reduce:transform-none"
                 >
-                    <div class="flex items-center justify-between gap-3 border-b border-bgn-gold/35 bg-bgn-navy px-5 py-3.5">
+                    <div class="flex items-center justify-between gap-3 border-b border-bgn-gold/40 bg-bgn-navy px-5 py-4">
                         <div>
                             <p class="text-[9px] font-bold uppercase tracking-[0.16em] text-bgn-gold-soft">
                                 {{ portion.subtitle }}
@@ -277,7 +298,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                                 :key="item.id"
                                 class="border-b border-slate-100 pb-4 last:border-0 last:pb-0"
                             >
-                                <div class="group/photo aspect-[16/10] w-full overflow-hidden rounded-lg bg-slate-100">
+                                <div class="public-image-reveal group/photo aspect-[16/10] w-full overflow-hidden rounded-md bg-slate-100">
                                     <img
                                         v-if="getPhoto(item)"
                                         :src="getPhoto(item)"
@@ -334,38 +355,57 @@ onBeforeUnmount(() => revealObserver?.disconnect());
 
                             <div class="mt-3 flex items-center justify-between gap-3 rounded-lg border border-bgn-line bg-bgn-surface px-4 py-3">
                                 <p class="text-xs text-slate-500">Total energi</p>
-                                <p class="text-lg font-bold tracking-tight text-bgn-navy">
+                                <p
+                                    v-if="getNutritionTotal(getItems(portion.key), 'calories') !== null"
+                                    class="public-nutrition-value text-lg font-bold tracking-tight text-bgn-navy tabular-nums"
+                                    :data-nutrition-key="`${portion.key}-calories`"
+                                    :data-nutrition-value="getNutritionTotal(getItems(portion.key), 'calories')"
+                                >
+                                    {{ formatNumber(getAnimatedNutrition(portion.key, 'calories')) }}
+                                    <span class="text-xs font-semibold">kkal</span>
+                                </p>
+                                <p v-else class="text-lg font-bold tracking-tight text-bgn-navy">
                                     {{ getNutritionTotal(getItems(portion.key), 'calories') === null
-                                        ? 'Belum lengkap'
-                                        : formatNumber(getNutritionTotal(getItems(portion.key), 'calories')) }}
-                                    <span v-if="getNutritionTotal(getItems(portion.key), 'calories') !== null" class="text-xs font-semibold">kkal</span>
+                                        ? 'Belum lengkap' : '' }}
                                 </p>
                             </div>
 
                             <div class="mt-3 grid grid-cols-3 divide-x divide-slate-100 border-y border-slate-100 py-3">
                                 <div class="px-2 first:pl-0">
                                     <p class="text-[11px] text-slate-500">Protein</p>
-                                    <p class="mt-1 text-sm font-bold text-slate-800">
-                                        {{ getNutritionTotal(getItems(portion.key), 'protein') === null
-                                            ? '-'
-                                            : `${formatNumber(getNutritionTotal(getItems(portion.key), 'protein'))} g` }}
+                                    <p
+                                        v-if="getNutritionTotal(getItems(portion.key), 'protein') !== null"
+                                        class="public-nutrition-value mt-1 text-sm font-bold text-slate-800 tabular-nums"
+                                        :data-nutrition-key="`${portion.key}-protein`"
+                                        :data-nutrition-value="getNutritionTotal(getItems(portion.key), 'protein')"
+                                    >
+                                        {{ formatNumber(getAnimatedNutrition(portion.key, 'protein')) }} g
                                     </p>
+                                    <p v-else class="mt-1 text-sm font-bold text-slate-800">-</p>
                                 </div>
                                 <div class="px-2">
                                     <p class="text-[11px] text-slate-500">Karbohidrat</p>
-                                    <p class="mt-1 text-sm font-bold text-slate-800">
-                                        {{ getNutritionTotal(getItems(portion.key), 'carbs') === null
-                                            ? '-'
-                                            : `${formatNumber(getNutritionTotal(getItems(portion.key), 'carbs'))} g` }}
+                                    <p
+                                        v-if="getNutritionTotal(getItems(portion.key), 'carbs') !== null"
+                                        class="public-nutrition-value mt-1 text-sm font-bold text-slate-800 tabular-nums"
+                                        :data-nutrition-key="`${portion.key}-carbs`"
+                                        :data-nutrition-value="getNutritionTotal(getItems(portion.key), 'carbs')"
+                                    >
+                                        {{ formatNumber(getAnimatedNutrition(portion.key, 'carbs')) }} g
                                     </p>
+                                    <p v-else class="mt-1 text-sm font-bold text-slate-800">-</p>
                                 </div>
                                 <div class="px-2">
                                     <p class="text-[11px] text-slate-500">Serat</p>
-                                    <p class="mt-1 text-sm font-bold text-slate-800">
-                                        {{ getNutritionTotal(getItems(portion.key), 'fiber') === null
-                                            ? '-'
-                                            : `${formatNumber(getNutritionTotal(getItems(portion.key), 'fiber'))} g` }}
+                                    <p
+                                        v-if="getNutritionTotal(getItems(portion.key), 'fiber') !== null"
+                                        class="public-nutrition-value mt-1 text-sm font-bold text-slate-800 tabular-nums"
+                                        :data-nutrition-key="`${portion.key}-fiber`"
+                                        :data-nutrition-value="getNutritionTotal(getItems(portion.key), 'fiber')"
+                                    >
+                                        {{ formatNumber(getAnimatedNutrition(portion.key, 'fiber')) }} g
                                     </p>
+                                    <p v-else class="mt-1 text-sm font-bold text-slate-800">-</p>
                                 </div>
                             </div>
                         </div>
@@ -416,30 +456,26 @@ onBeforeUnmount(() => revealObserver?.disconnect());
             v-if="menu"
             class="public-scroll-reveal mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:px-10 lg:py-14"
         >
-            <div class="overflow-hidden rounded-xl border border-bgn-line bg-white shadow-sm">
-                <header class="border-b border-bgn-line border-l-[3px] border-l-bgn-gold bg-bgn-surface px-5 py-6 sm:px-8 sm:py-7">
-                    <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-bgn-gold-dark">
-                        Tabel Angka Kecukupan Gizi (AKG)
-                    </p>
-                    <h2 class="mt-2 text-xl font-bold tracking-tight text-bgn-navy sm:text-2xl">
-                        Transparansi Kandungan Nutrisi Lengkap
-                    </h2>
-                    <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500">
-                        Perhitungan komprehensif berdasarkan pedoman standar Permenkes RI No. 28 Tahun 2019.
-                    </p>
+            <div class="overflow-hidden border-y border-bgn-line bg-white">
+                <header class="grid gap-5 border-b border-bgn-line px-5 py-7 sm:px-8 lg:grid-cols-[1fr_0.5fr] lg:items-end lg:px-10 lg:py-9">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-bgn-gold-dark">Tabel Angka Kecukupan Gizi (AKG)</p>
+                        <h2 class="mt-3 text-2xl font-bold tracking-[-0.025em] text-bgn-navy sm:text-[34px]">Transparansi Kandungan Nutrisi Lengkap</h2>
+                    </div>
+                    <p class="text-sm leading-6 text-slate-500 lg:text-right">Perhitungan komprehensif berdasarkan pedoman standar Permenkes RI No. 28 Tahun 2019.</p>
                 </header>
 
                 <div class="overflow-x-auto">
-                    <table class="min-w-[620px] w-full table-fixed border-collapse text-left text-xs sm:text-sm">
+                    <table class="min-w-[620px] w-full table-fixed border-collapse text-left text-sm">
                         <caption class="sr-only">
                             Sumber bahan makanan untuk setiap unsur nutrisi pada menu.
                         </caption>
                         <thead>
-                            <tr class="border-b border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">
-                                <th scope="col" class="w-[36%] px-4 py-4 sm:px-8">
+                            <tr class="border-b border-bgn-line bg-bgn-surface text-[11px] font-bold uppercase tracking-[0.12em] text-slate-600">
+                                <th scope="col" class="w-[36%] px-5 py-4 sm:px-10">
                                     Unsur Nutrisi
                                 </th>
-                                <th scope="col" class="px-4 py-4 sm:px-8">
+                                <th scope="col" class="px-5 py-4 sm:px-10">
                                     Sumber Bahan Makanan
                                 </th>
                             </tr>
@@ -448,9 +484,9 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                             <tr
                                 v-for="nutrient in nutritionRows"
                                 :key="nutrient.key"
-                                class="transition-colors hover:bg-slate-50/60"
+                                class="border-b border-slate-100 transition-colors duration-200 last:border-b-0 hover:bg-bgn-surface/70"
                             >
-                                <th scope="row" class="px-4 py-4 font-semibold text-slate-900 sm:px-8 sm:py-4">
+                                <th scope="row" class="px-5 py-5 font-bold text-slate-900 sm:px-10">
                                     <span class="flex items-center gap-2">
                                         <span
                                             class="h-2 w-2 shrink-0 rounded-full"
@@ -459,7 +495,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                                         <span>{{ nutrient.label }}</span>
                                     </span>
                                 </th>
-                                <td class="break-words px-4 py-4 leading-6 sm:px-8 sm:py-4">
+                                <td class="break-words px-5 py-5 leading-6 text-slate-600 sm:px-10">
                                     <span v-if="nutrient.sources.length">
                                         {{ nutrient.sources.join(', ') }}
                                     </span>
