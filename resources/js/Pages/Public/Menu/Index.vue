@@ -6,6 +6,8 @@ import KitchenDocumentation from '@/Components/Public/KitchenDocumentation.vue';
 import FeedbackForm from '@/Components/Public/FeedbackForm.vue';
 import { getPublicPhotoUrl } from '@/Utils/publicPhotoUrl';
 
+const geometricOrnamentUrl = '/images/mbg-geometric-ornament.png';
+
 defineOptions({
     layout: PublicLayout,
 });
@@ -192,7 +194,17 @@ onBeforeUnmount(() => revealObserver?.disconnect());
         <!-- Hero menu -->
         <section class="relative overflow-hidden bg-bgn-surface">
             <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[54%] border-l border-bgn-line bg-white/65 lg:block"></div>
-            <div aria-hidden="true" class="public-batik-hero pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[min(44vw,560px)] lg:block"></div>
+            <div aria-hidden="true" class="public-geometric-hero pointer-events-none hidden xl:block">
+                <img
+                    :src="geometricOrnamentUrl"
+                    alt=""
+                    width="600"
+                    height="600"
+                    class="h-full w-full object-contain"
+                    fetchpriority="high"
+                    decoding="async"
+                />
+            </div>
             <div class="relative z-10 mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
                 <div v-if="menu" class="grid items-end gap-7 border-b border-bgn-line pb-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.55fr)] lg:gap-10 lg:pb-10">
                     <div class="public-page-enter min-w-0 max-w-5xl">
@@ -215,7 +227,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                         </p>
                     </div>
 
-                    <div class="public-page-enter public-hero-date border-l-2 border-bgn-gold bg-bgn-navy px-5 py-4 text-white sm:px-6 sm:py-5 lg:justify-self-end lg:w-full lg:max-w-[360px]">
+                    <div class="public-page-enter public-hero-date border-l-2 border-bgn-gold bg-bgn-navy px-5 py-4 text-white sm:px-6 sm:py-5 lg:justify-self-end lg:w-full lg:max-w-[300px]">
                         <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-bgn-gold-soft">
                             Menu Hari Ini
                         </p>
@@ -437,8 +449,18 @@ onBeforeUnmount(() => revealObserver?.disconnect());
         <div
             v-if="menu"
             aria-hidden="true"
-            class="public-scroll-reveal public-batik-divider"
-        ></div>
+            class="public-scroll-reveal public-geometric-divider"
+        >
+            <img
+                :src="geometricOrnamentUrl"
+                alt=""
+                width="600"
+                height="600"
+                class="public-geometric-divider-mark"
+                loading="lazy"
+                decoding="async"
+            />
+        </div>
 
         <!-- Nutrition transparency -->
         <section
