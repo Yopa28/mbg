@@ -119,25 +119,7 @@ const formatDateTime = (value) => {
                             {{ item.description }}
                         </p>
 
-                        <div
-                            v-if="item.temperature !== null && item.temperature !== undefined"
-                            class="mt-4 flex items-center justify-between border-t border-bgn-line pt-3"
-                        >
-                            <div>
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                                    Hasil pemeriksaan suhu
-                                </p>
-                                <p class="mt-1 text-lg font-bold text-bgn-navy">
-                                    {{ item.temperature }} °C
-                                </p>
-                            </div>
-                            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-bgn-navy/5 text-bgn-navy">
-                                <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" stroke="currentColor" stroke-width="1.7">
-                                    <path d="M14 14.76V5a3 3 0 0 0-6 0v9.76a5 5 0 1 0 6 0Z"></path>
-                                    <path d="M11 11v7"></path>
-                                </svg>
-                            </div>
-                        </div>
+
 
                         <p
                             v-if="item.captured_at"
