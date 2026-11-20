@@ -193,7 +193,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
     <div>
         <!-- Hero menu -->
         <section class="relative overflow-hidden bg-bgn-surface">
-            <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[54%] border-l border-bgn-line bg-white/65 lg:block"></div>
+            <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[38%] border-l border-bgn-line bg-white/65 lg:block"></div>
             <div aria-hidden="true" class="public-geometric-hero pointer-events-none hidden xl:block">
                 <img
                     :src="geometricOrnamentUrl"

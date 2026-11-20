@@ -36,33 +36,29 @@
 @keyframes public-geometric-reveal {
     from {
         opacity: 0;
-        transform: translate3d(18px, -50%, 0) scale(0.96);
-        clip-path: inset(14% 0 14% 18%);
+        transform: translate3d(12px, -50%, 0) scale(0.98);
     }
 
     to {
-        opacity: 0.34;
+        opacity: 0.28;
         transform: translate3d(0, -50%, 0) scale(1);
-        clip-path: inset(0);
     }
 }
 
 .public-geometric-hero {
     position: absolute;
     top: 50%;
-    right: 40px;
+    right: clamp(280px, 25vw, 360px);
     z-index: 1;
-    width: clamp(360px, 39vw, 520px);
+    width: clamp(300px, 26vw, 360px);
     aspect-ratio: 1;
-    opacity: 0.34;
+    opacity: 0.28;
     transform: translate3d(0, -50%, 0);
-    mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 88%, transparent 100%);
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 88%, transparent 100%);
 }
 
 .public-geometric-divider {
     position: relative;
-    height: clamp(64px, 7vw, 84px);
+    height: clamp(72px, 6vw, 88px);
     overflow: hidden;
     border-block: 1px solid rgb(200 148 70 / 24%);
     background-color: var(--color-bgn-cream);
@@ -71,16 +67,16 @@
 .public-geometric-divider-mark {
     position: absolute;
     top: 50%;
-    right: clamp(24px, 12vw, 176px);
-    width: 112px;
-    height: 112px;
-    opacity: 0.62;
-    transform: translateY(-50%);
+    left: 50%;
+    width: 144px;
+    height: 144px;
+    opacity: 0.42;
+    transform: translate(-50%, -50%);
 }
 
 .public-geometric-footer-signature {
     position: relative;
-    height: 88px;
+    height: 96px;
     overflow: hidden;
     border-bottom: 2px solid var(--color-bgn-gold);
     background-color: var(--color-bgn-cream);
@@ -89,27 +85,26 @@
 .public-geometric-footer-mark {
     position: absolute;
     top: 50%;
-    right: 48px;
-    width: 240px;
-    height: auto;
-    opacity: 0.5;
-    transform: translateY(-50%);
+    left: 50%;
+    width: 184px;
+    height: 184px;
+    opacity: 0.44;
+    transform: translate(-50%, -50%);
 }
 
 @media (max-width: 639px) {
     .public-geometric-divider-mark {
-        right: 20px;
-        width: 76px;
-        height: 76px;
+        width: 104px;
+        height: 104px;
     }
 
     .public-geometric-footer-signature {
-        height: 68px;
+        height: 72px;
     }
 
     .public-geometric-footer-mark {
-        right: 20px;
-        width: 104px;
+        width: 112px;
+        height: 112px;
     }
 }
 
@@ -168,7 +163,7 @@
 
     .public-page-motion .public-geometric-hero {
         animation: none !important;
-        opacity: 0.34;
+        opacity: 0.28;
         transform: translate3d(0, -50%, 0);
     }
 }
