@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         DB::statement("
             ALTER TABLE daily_menu_items
             MODIFY portion_type ENUM('large', 'small', 'toddler') NOT NULL
@@ -16,6 +20,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         $hasToddlerData = DB::table('daily_menu_items')
             ->where('portion_type', 'toddler')
             ->exists();

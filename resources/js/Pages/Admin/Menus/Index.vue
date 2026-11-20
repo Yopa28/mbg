@@ -47,12 +47,22 @@ const addItem = (portionType = 'large') => {
         calories: '',
         protein: '',
         carbs: '',
-        fat: '',
+        fiber: '',
     });
 };
 
 const removeItem = (index) => {
     form.items.splice(index, 1);
+};
+
+const selectMenuItem = (item) => {
+    const food = props.menuItems.find((menuItem) => menuItem.id === Number(item.menu_item_id));
+    if (!food) return;
+
+    item.calories = food.calories ?? '';
+    item.protein = food.protein ?? '';
+    item.carbs = food.carbs ?? '';
+    item.fiber = food.fiber ?? '';
 };
 
 const openCreateForm = () => {
@@ -79,7 +89,7 @@ const openEditForm = (menu) => {
         calories: item.calories ?? '',
         protein: item.protein ?? '',
         carbs: item.carbs ?? '',
-        fat: item.fat ?? '',
+        fiber: item.fiber ?? '',
     }));
 
     showForm.value = true;
@@ -111,7 +121,12 @@ const changeStatus = (menu) => {
 };
 
 const deleteMenu = (menu) => {
-    if (!confirm(`Hapus menu "${menu.title}"? Data makanan dalam menu ini juga akan dihapus.`)) {
+    if (menu.status === 'published') {
+        alert('Menu yang dipublikasikan harus dijadikan draft sebelum dihapus.');
+        return;
+    }
+
+    if (!confirm(`Hapus draft "${menu.title}"? Item menu dan dokumentasi terkait juga akan dihapus.`)) {
         return;
     }
 
@@ -145,6 +160,20 @@ const portionLabel = (type) => {
     <Head title="Kelola Menu Harian" />
 
     <div class="space-y-6">
+        <div
+            v-if="$page.props.flash?.success"
+            role="status"
+            class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800"
+        >
+            {{ $page.props.flash.success }}
+        </div>
+        <div
+            v-if="$page.props.errors.menu"
+            role="alert"
+            class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
+        >
+            {{ $page.props.errors.menu }}
+        </div>
         <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
 ∑            <div>
                 <h2 class="text-lg font-semibold text-slate-800">
@@ -328,6 +357,7 @@ const portionLabel = (type) => {
                                     </label>
                                     <select
                                         v-model="item.menu_item_id"
+                                        @change="selectMenuItem(item)"
                                         required
                                         class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500"
                                     >
@@ -441,10 +471,10 @@ const portionLabel = (type) => {
 
                                     <div>
                                         <label class="mb-1.5 block text-xs text-slate-500">
-                                            Lemak (g)
+                                            Serat (g)
                                         </label>
                                         <input
-                                            v-model="item.fat"
+                                            v-model="item.fiber"
                                             type="number"
                                             min="0"
                                             step="0.01"
@@ -557,6 +587,7 @@ const portionLabel = (type) => {
                             <button
                                 type="button"
                                 @click="deleteMenu(menu)"
+                                v-if="menu.status === 'draft'"
                                 class="rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-600 hover:bg-red-50"
                             >
                                 Hapus

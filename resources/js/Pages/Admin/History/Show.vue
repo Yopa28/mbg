@@ -171,9 +171,9 @@ const formatNumber = (value) => {
                                 </p>
                             </div>
                             <div class="rounded-lg bg-slate-50 p-3">
-                                <p class="text-xs text-slate-500">Lemak</p>
+                                <p class="text-xs text-slate-500">Serat</p>
                                 <p class="mt-1 font-semibold text-slate-800">
-                                    {{ formatNumber(item.fat) }} <span class="text-xs font-normal">g</span>
+                                    {{ formatNumber(item.fiber) }} <span class="text-xs font-normal">g</span>
                                 </p>
                             </div>
                         </div>

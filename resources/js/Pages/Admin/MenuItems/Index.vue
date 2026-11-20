@@ -22,6 +22,10 @@ const form = useForm({
     category: '',
     description: '',
     photo: null,
+    calories: '',
+    protein: '',
+    carbs: '',
+    fiber: '',
 });
 
 const getPhotoUrl = (photo) => {
@@ -46,6 +50,10 @@ const openEditForm = (item) => {
     form.name = item.name;
     form.category = item.category ?? '';
     form.description = item.description ?? '';
+    form.calories = item.calories ?? '';
+    form.protein = item.protein ?? '';
+    form.carbs = item.carbs ?? '';
+    form.fiber = item.fiber ?? '';
     form.photo = null;
     form.clearErrors();
     showForm.value = true;
@@ -83,6 +91,13 @@ const deleteItem = (item) => {
     <Head title="Kelola Makanan" />
 
     <div class="space-y-6">
+        <div
+            v-if="$page.props.flash?.success"
+            role="status"
+            class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800"
+        >
+            {{ $page.props.flash.success }}
+        </div>
         <!-- Notifikasi error -->
 <div
     v-if="$page.props.errors.menuItem"
@@ -184,6 +199,37 @@ const deleteItem = (item) => {
                     </p>
                 </div>
 
+                <fieldset class="rounded-xl border border-slate-200 p-4">
+                    <legend class="px-2 text-sm font-semibold text-slate-700">
+                        Kandungan nutrisi
+                    </legend>
+                    <p class="mb-4 text-xs leading-5 text-slate-500">
+                        Nilai per sajian bahan makanan. Kosongkan nilai yang belum tersedia.
+                    </p>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="mb-1.5 block text-xs font-medium text-slate-600">Energi (kkal)</label>
+                            <input v-model="form.calories" type="number" min="0" step="0.01" class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500" />
+                            <p v-if="form.errors.calories" class="mt-1 text-xs text-red-600">{{ form.errors.calories }}</p>
+                        </div>
+                        <div>
+                            <label class="mb-1.5 block text-xs font-medium text-slate-600">Protein (g)</label>
+                            <input v-model="form.protein" type="number" min="0" step="0.01" class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500" />
+                            <p v-if="form.errors.protein" class="mt-1 text-xs text-red-600">{{ form.errors.protein }}</p>
+                        </div>
+                        <div>
+                            <label class="mb-1.5 block text-xs font-medium text-slate-600">Karbohidrat (g)</label>
+                            <input v-model="form.carbs" type="number" min="0" step="0.01" class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500" />
+                            <p v-if="form.errors.carbs" class="mt-1 text-xs text-red-600">{{ form.errors.carbs }}</p>
+                        </div>
+                        <div>
+                            <label class="mb-1.5 block text-xs font-medium text-slate-600">Serat (g)</label>
+                            <input v-model="form.fiber" type="number" min="0" step="0.01" class="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500" />
+                            <p v-if="form.errors.fiber" class="mt-1 text-xs text-red-600">{{ form.errors.fiber }}</p>
+                        </div>
+                    </div>
+                </fieldset>
+
                 <div>
                     <label class="mb-2 block text-sm font-medium text-slate-700">
                         Foto Makanan
@@ -253,6 +299,7 @@ const deleteItem = (item) => {
                             <th class="px-5 py-3 font-medium">Foto</th>
                             <th class="px-5 py-3 font-medium">Nama Makanan</th>
                             <th class="px-5 py-3 font-medium">Kategori</th>
+                            <th class="px-5 py-3 font-medium">Kandungan per Sajian</th>
                             <th class="px-5 py-3 text-right font-medium">Aksi</th>
                         </tr>
                     </thead>
@@ -289,6 +336,16 @@ const deleteItem = (item) => {
 
                             <td class="px-5 py-4 text-slate-600">
                                 {{ item.category || '-' }}
+                            </td>
+
+                            <td class="px-5 py-4 text-xs text-slate-600">
+                                <span>{{ item.calories ?? '-' }} kkal</span>
+                                <span class="mx-1 text-slate-300">·</span>
+                                <span>P {{ item.protein ?? '-' }} g</span>
+                                <span class="mx-1 text-slate-300">·</span>
+                                <span>K {{ item.carbs ?? '-' }} g</span>
+                                <span class="mx-1 text-slate-300">·</span>
+                                <span>S {{ item.fiber ?? '-' }} g</span>
                             </td>
 
                             <td class="px-5 py-4">

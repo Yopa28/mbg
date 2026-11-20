@@ -12,7 +12,21 @@ class MenuItem extends Model
         'category',
         'description',
         'photo',
+        'calories',
+        'protein',
+        'carbs',
+        'fiber',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'calories' => 'decimal:2',
+            'protein' => 'decimal:2',
+            'carbs' => 'decimal:2',
+            'fiber' => 'decimal:2',
+        ];
+    }
 
     public function dailyMenuItems(): HasMany
     {

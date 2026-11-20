@@ -19,7 +19,7 @@ class DailyMenuController extends Controller
                 ->paginate(10),
 
             'menuItems' => MenuItem::orderBy('name')
-                ->get(['id', 'name', 'category']),
+                ->get(['id', 'name', 'category', 'calories', 'protein', 'carbs', 'fiber']),
         ]);
     }
 
@@ -44,7 +44,7 @@ class DailyMenuController extends Controller
             'items.*.calories' => ['nullable', 'numeric', 'min:0'],
             'items.*.protein' => ['nullable', 'numeric', 'min:0'],
             'items.*.carbs' => ['nullable', 'numeric', 'min:0'],
-            'items.*.fat' => ['nullable', 'numeric', 'min:0'],
+            'items.*.fiber' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         $items = $validated['items'] ?? [];
@@ -53,6 +53,21 @@ class DailyMenuController extends Controller
         $menu = DailyMenu::create($validated);
 
         foreach ($items as $item) {
+            $menuItem = MenuItem::findOrFail($item['menu_item_id']);
+            $item['calories'] = $item['calories'] !== '' && $item['calories'] !== null
+                ? $item['calories']
+                : $menuItem->calories;
+            $item['protein'] = $item['protein'] !== '' && $item['protein'] !== null
+                ? $item['protein']
+                : $menuItem->protein;
+            $item['carbs'] = $item['carbs'] !== '' && $item['carbs'] !== null
+                ? $item['carbs']
+                : $menuItem->carbs;
+            $item['fiber'] = $item['fiber'] !== '' && $item['fiber'] !== null
+                ? $item['fiber']
+                : $menuItem->fiber;
+            unset($item['fat']);
+
             $menu->items()->create($item);
         }
 
@@ -84,7 +99,7 @@ class DailyMenuController extends Controller
             'items.*.calories' => ['nullable', 'numeric', 'min:0'],
             'items.*.protein' => ['nullable', 'numeric', 'min:0'],
             'items.*.carbs' => ['nullable', 'numeric', 'min:0'],
-            'items.*.fat' => ['nullable', 'numeric', 'min:0'],
+            'items.*.fiber' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         $items = $validated['items'] ?? [];
@@ -95,6 +110,21 @@ class DailyMenuController extends Controller
         $dailyMenu->items()->delete();
 
         foreach ($items as $item) {
+            $menuItem = MenuItem::findOrFail($item['menu_item_id']);
+            $item['calories'] = $item['calories'] !== '' && $item['calories'] !== null
+                ? $item['calories']
+                : $menuItem->calories;
+            $item['protein'] = $item['protein'] !== '' && $item['protein'] !== null
+                ? $item['protein']
+                : $menuItem->protein;
+            $item['carbs'] = $item['carbs'] !== '' && $item['carbs'] !== null
+                ? $item['carbs']
+                : $menuItem->carbs;
+            $item['fiber'] = $item['fiber'] !== '' && $item['fiber'] !== null
+                ? $item['fiber']
+                : $menuItem->fiber;
+            unset($item['fat']);
+
             $dailyMenu->items()->create($item);
         }
 
@@ -129,9 +159,9 @@ class DailyMenuController extends Controller
 
     public function destroy(DailyMenu $dailyMenu)
     {
-        if ($dailyMenu->menu_date->lt(today())) {
+        if ($dailyMenu->status === 'published') {
             return back()->withErrors([
-                'menu' => 'Menu yang sudah masuk riwayat harian tidak dapat dihapus.',
+                'menu' => 'Menu yang sudah dipublikasikan tidak dapat dihapus langsung. Jadikan draft terlebih dahulu.',
             ]);
         }
 

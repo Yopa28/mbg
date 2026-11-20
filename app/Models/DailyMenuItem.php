@@ -17,6 +17,7 @@ class DailyMenuItem extends Model
         'protein',
         'carbs',
         'fat',
+        'fiber',
     ];
 
     protected function casts(): array
@@ -27,6 +28,7 @@ class DailyMenuItem extends Model
             'protein' => 'decimal:2',
             'carbs' => 'decimal:2',
             'fat' => 'decimal:2',
+            'fiber' => 'decimal:2',
         ];
     }
 

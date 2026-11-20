@@ -42,9 +42,9 @@ const navigation = [
     },
     {
         label: 'Edit Nutrisi',
-        href: null,
+        href: '/admin/menu-items',
         icon: '✚',
-        disabled: true,
+        active: ['/admin/menu-items'],
     },
     {
         label: 'Hasil Ulasan',

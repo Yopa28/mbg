@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MenuItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class MenuItemController extends Controller
@@ -24,6 +25,10 @@ class MenuItemController extends Controller
             'category' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'calories' => ['nullable', 'numeric', 'min:0'],
+            'protein' => ['nullable', 'numeric', 'min:0'],
+            'carbs' => ['nullable', 'numeric', 'min:0'],
+            'fiber' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         if ($request->hasFile('photo')) {
@@ -44,6 +49,10 @@ public function update(Request $request, MenuItem $menuItem)
         'category' => ['nullable', 'string', 'max:255'],
         'description' => ['nullable', 'string'],
         'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        'calories' => ['nullable', 'numeric', 'min:0'],
+        'protein' => ['nullable', 'numeric', 'min:0'],
+        'carbs' => ['nullable', 'numeric', 'min:0'],
+        'fiber' => ['nullable', 'numeric', 'min:0'],
     ]);
 
     $oldPhoto = $menuItem->photo;
@@ -62,7 +71,16 @@ public function update(Request $request, MenuItem $menuItem)
         unset($validated['photo']);
     }
 
-    $menuItem->update($validated);
+    DB::transaction(function () use ($menuItem, $validated, $request) {
+        $menuItem->update($validated);
+
+        $menuItem->dailyMenuItems()->update([
+            'calories' => $validated['calories'] ?? null,
+            'protein' => $validated['protein'] ?? null,
+            'carbs' => $validated['carbs'] ?? null,
+            'fiber' => $validated['fiber'] ?? null,
+        ]);
+    });
 
     if ($request->hasFile('photo') && $oldPhoto) {
         Storage::disk('public')->delete($oldPhoto);

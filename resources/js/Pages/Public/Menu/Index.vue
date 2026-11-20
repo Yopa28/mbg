@@ -51,10 +51,7 @@ const nutrientDefinitions = [
     { key: 'energy', label: 'Energi Total', field: 'calories', indicator: 'bg-amber-500' },
     { key: 'protein', label: 'Protein', field: 'protein', indicator: 'bg-emerald-500' },
     { key: 'carbs', label: 'Karbohidrat', field: 'carbs', indicator: 'bg-sky-500' },
-    { key: 'fat', label: 'Lemak Sehat', field: 'fat', indicator: 'bg-amber-600' },
-    { key: 'fiber', label: 'Serat Pangan', field: null, indicator: 'bg-emerald-600' },
-    { key: 'iron', label: 'Zat Besi (Fe)', field: null, indicator: 'bg-rose-500' },
-    { key: 'calcium', label: 'Kalsium (Ca)', field: null, indicator: 'bg-amber-400' },
+    { key: 'fiber', label: 'Serat Pangan', field: 'fiber', indicator: 'bg-emerald-600' },
 ];
 
 const formatDate = (value) => {
@@ -94,29 +91,6 @@ const getNutritionTotal = (items, field) => {
     }
 
     return items.reduce((total, item) => total + Number(item[field]), 0);
-};
-
-const getWeightInGrams = (items) => {
-    if (!items.length) return null;
-
-    let total = 0;
-
-    for (const item of items) {
-        const quantity = Number(item.quantity);
-        const unit = String(item.unit || '').trim().toLowerCase();
-
-        if (!Number.isFinite(quantity)) return null;
-
-        if (['g', 'gr', 'gram', 'grama'].includes(unit)) {
-            total += quantity;
-        } else if (['kg', 'kilogram', 'kilogram'].includes(unit)) {
-            total += quantity * 1000;
-        } else {
-            return null;
-        }
-    }
-
-    return total;
 };
 
 const getPhoto = (item) => {
@@ -193,6 +167,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
     <div>
         <!-- Hero menu -->
         <section class="relative overflow-hidden bg-bgn-surface">
+            <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[38%] border-l border-bgn-gold/10 bg-bgn-gold-pale/30 lg:block"></div>
             <div aria-hidden="true" class="public-geometric-hero pointer-events-none hidden lg:block">
                 <img
                     :src="geometricOrnamentUrl"
@@ -385,22 +360,13 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                                     </p>
                                 </div>
                                 <div class="px-2">
-                                    <p class="text-[11px] text-slate-500">Lemak</p>
+                                    <p class="text-[11px] text-slate-500">Serat</p>
                                     <p class="mt-1 text-sm font-bold text-slate-800">
-                                        {{ getNutritionTotal(getItems(portion.key), 'fat') === null
+                                        {{ getNutritionTotal(getItems(portion.key), 'fiber') === null
                                             ? '-'
-                                            : `${formatNumber(getNutritionTotal(getItems(portion.key), 'fat'))} g` }}
+                                            : `${formatNumber(getNutritionTotal(getItems(portion.key), 'fiber'))} g` }}
                                     </p>
                                 </div>
-                            </div>
-
-                            <div class="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
-                                <span class="text-xs text-slate-500">Total berat makanan</span>
-                                <span class="text-sm font-bold text-bgn-navy-deep">
-                                    {{ getWeightInGrams(getItems(portion.key)) === null
-                                        ? 'Belum tersedia'
-                                        : `${formatNumber(getWeightInGrams(getItems(portion.key)))} g` }}
-                                </span>
                             </div>
                         </div>
                     </div>
@@ -509,7 +475,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
                 </div>
 
                 <p class="border-t border-slate-100 px-5 py-4 text-xs leading-5 text-slate-500 sm:px-8">
-                    Sumber untuk energi, protein, karbohidrat, dan lemak diambil dari item menu yang memiliki nilai nutrisi terkait. Data serat pangan, zat besi, dan kalsium belum tersedia pada struktur menu saat ini.
+                    Sumber untuk energi, protein, karbohidrat, dan serat diambil dari item menu yang memiliki nilai nutrisi terkait. Baris nutrisi ditandai belum lengkap jika salah satu bahan pada kategori porsi belum memiliki nilainya.
                 </p>
             </div>
         </section>

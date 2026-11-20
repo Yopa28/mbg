@@ -145,9 +145,9 @@ const formatNumber = (value) => {
                                         </p>
                                     </div>
                                     <div>
-                                        <p class="text-xs text-slate-500">Lemak</p>
+                                        <p class="text-xs text-slate-500">Serat</p>
                                         <p class="mt-1 font-semibold text-slate-800">
-                                            {{ formatNumber(Number(item.fat) || 0) }} g
+                                            {{ formatNumber(Number(item.fiber) || 0) }} g
                                         </p>
                                     </div>
                                 </div>
@@ -187,9 +187,9 @@ const formatNumber = (value) => {
                                     </p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-slate-500">Lemak</p>
+                                    <p class="text-xs text-slate-500">Serat</p>
                                     <p class="mt-1 text-lg font-bold text-slate-800">
-                                        {{ formatNumber(getTotal(getItems(portion.key), 'fat')) }} g
+                                        {{ formatNumber(getTotal(getItems(portion.key), 'fiber')) }} g
                                     </p>
                                 </div>
                             </div>
