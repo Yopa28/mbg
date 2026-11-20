@@ -36,24 +36,24 @@
 @keyframes public-geometric-reveal {
     from {
         opacity: 0;
-        transform: translate3d(24px, -50%, 0) scale(0.94);
+        transform: translate3d(-50%, -50%, 0) scale(0.96);
     }
 
     to {
-        opacity: 0.24;
-        transform: translate3d(0, -50%, 0) scale(1);
+        opacity: 0.18;
+        transform: translate3d(-50%, -50%, 0) scale(1);
     }
 }
 
 .public-geometric-hero {
     position: absolute;
-    top: 52%;
-    right: clamp(-92px, -4vw, -32px);
+    top: 50%;
+    left: 50%;
     z-index: 0;
-    width: clamp(440px, 38vw, 560px);
+    width: clamp(520px, 48vw, 680px);
     aspect-ratio: 1;
-    opacity: 0.24;
-    transform: translate3d(0, -50%, 0);
+    opacity: 0.18;
+    transform: translate3d(-50%, -50%, 0);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -111,7 +111,7 @@
 
     .public-page-motion .public-geometric-hero {
         animation: none !important;
-        opacity: 0.24;
-        transform: translate3d(0, -50%, 0);
+        opacity: 0.18;
+        transform: translate3d(-50%, -50%, 0);
     }
 }
