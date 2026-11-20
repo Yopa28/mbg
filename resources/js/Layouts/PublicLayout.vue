@@ -1,6 +1,5 @@
 <script setup>
 const bgnLogoUrl = '/images/bgn-seal.png';
-const geometricOrnamentUrl = '/images/mbg-geometric-ornament.png';
 
 defineProps({
     sppg: {
@@ -55,17 +54,6 @@ defineProps({
         </main>
 
         <footer class="border-t-2 border-bgn-gold bg-bgn-navy text-white">
-            <div aria-hidden="true" class="public-geometric-footer-signature">
-                <img
-                    :src="geometricOrnamentUrl"
-                    alt=""
-                    width="600"
-                    height="600"
-                    class="public-geometric-footer-mark"
-                    loading="lazy"
-                    decoding="async"
-                />
-            </div>
             <div class="mx-auto flex max-w-[1440px] flex-col gap-6 px-5 py-8 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
                 <div class="flex items-center gap-3">
                     <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-bgn-gold-soft/60 bg-bgn-cream p-1">

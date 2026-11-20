@@ -194,7 +194,7 @@ onBeforeUnmount(() => revealObserver?.disconnect());
         <!-- Hero menu -->
         <section class="relative overflow-hidden bg-bgn-surface">
             <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[38%] border-l border-bgn-line bg-white/65 lg:block"></div>
-            <div aria-hidden="true" class="public-geometric-hero pointer-events-none hidden xl:block">
+            <div aria-hidden="true" class="public-geometric-hero pointer-events-none hidden lg:block">
                 <img
                     :src="geometricOrnamentUrl"
                     alt=""
@@ -445,22 +445,6 @@ onBeforeUnmount(() => revealObserver?.disconnect());
             v-if="menu"
             :documentations="menu.kitchen_documentations || []"
         />
-
-        <div
-            v-if="menu"
-            aria-hidden="true"
-            class="public-scroll-reveal public-geometric-divider"
-        >
-            <img
-                :src="geometricOrnamentUrl"
-                alt=""
-                width="600"
-                height="600"
-                class="public-geometric-divider-mark"
-                loading="lazy"
-                decoding="async"
-            />
-        </div>
 
         <!-- Nutrition transparency -->
         <section

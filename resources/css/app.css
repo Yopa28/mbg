@@ -36,76 +36,24 @@
 @keyframes public-geometric-reveal {
     from {
         opacity: 0;
-        transform: translate3d(12px, -50%, 0) scale(0.98);
+        transform: translate3d(24px, -50%, 0) scale(0.94);
     }
 
     to {
-        opacity: 0.28;
+        opacity: 0.24;
         transform: translate3d(0, -50%, 0) scale(1);
     }
 }
 
 .public-geometric-hero {
     position: absolute;
-    top: 50%;
-    right: clamp(280px, 25vw, 360px);
-    z-index: 1;
-    width: clamp(300px, 26vw, 360px);
+    top: 52%;
+    right: clamp(-92px, -4vw, -32px);
+    z-index: 0;
+    width: clamp(440px, 38vw, 560px);
     aspect-ratio: 1;
-    opacity: 0.28;
+    opacity: 0.24;
     transform: translate3d(0, -50%, 0);
-}
-
-.public-geometric-divider {
-    position: relative;
-    height: clamp(72px, 6vw, 88px);
-    overflow: hidden;
-    border-block: 1px solid rgb(200 148 70 / 24%);
-    background-color: var(--color-bgn-cream);
-}
-
-.public-geometric-divider-mark {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 144px;
-    height: 144px;
-    opacity: 0.42;
-    transform: translate(-50%, -50%);
-}
-
-.public-geometric-footer-signature {
-    position: relative;
-    height: 96px;
-    overflow: hidden;
-    border-bottom: 2px solid var(--color-bgn-gold);
-    background-color: var(--color-bgn-cream);
-}
-
-.public-geometric-footer-mark {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 184px;
-    height: 184px;
-    opacity: 0.44;
-    transform: translate(-50%, -50%);
-}
-
-@media (max-width: 639px) {
-    .public-geometric-divider-mark {
-        width: 104px;
-        height: 104px;
-    }
-
-    .public-geometric-footer-signature {
-        height: 72px;
-    }
-
-    .public-geometric-footer-mark {
-        width: 112px;
-        height: 112px;
-    }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -163,7 +111,7 @@
 
     .public-page-motion .public-geometric-hero {
         animation: none !important;
-        opacity: 0.28;
+        opacity: 0.24;
         transform: translate3d(0, -50%, 0);
     }
 }
